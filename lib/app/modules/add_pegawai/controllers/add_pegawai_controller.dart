@@ -36,6 +36,9 @@ class AddPegawaiController extends GetxController {
           });
 
           Get.snackbar('Berhasil', 'Berhasil menambahkan pegawai');
+
+          await credential.user!.sendEmailVerification();
+
         }
 
         if (kDebugMode) {
