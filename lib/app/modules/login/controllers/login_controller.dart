@@ -25,9 +25,19 @@ class LoginController extends GetxController {
           Get.offAllNamed(Routes.home);
         } else {
           Get.defaultDialog(
-            title: "Belum Verifikasi",
-            middleText: "Anda belum melakukan verifikasi email",
-          );
+              title: "Belum Verifikasi",
+              middleText: "Anda belum melakukan verifikasi email",
+              actions: [
+                OutlinedButton(
+                  onPressed: () => Get.back(),
+                  child: const Text("Batal"),
+                ),
+                ElevatedButton(
+                    onPressed: () => {
+                          credential.user!.sendEmailVerification(),
+                        },
+                    child: const Text('Kirim email verifikasi'))
+              ]);
         }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found' || e.code == 'wrong-password') {
