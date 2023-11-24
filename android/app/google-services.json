@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1079433568427",
+    "project_id": "hrisdev-a52f1",
+    "storage_bucket": "hrisdev-a52f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079433568427:android:76a115c9903816b54557ee",
+        "android_client_info": {
+          "package_name": "com.hrisdev.hris"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe002_LapVKW40d7o3f5JYEtxrbBMFhCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
