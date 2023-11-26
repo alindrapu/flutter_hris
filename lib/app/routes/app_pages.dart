@@ -40,7 +40,7 @@ class AppPages {
       binding: NewPasswordBinding(),
     ),
     GetPage(
-      name: _Paths.FORGOT_PASSWORD,
+      name: _Paths.forgotPassword,
       page: () => const ForgotPasswordView(),
       binding: ForgotPasswordBinding(),
     ),

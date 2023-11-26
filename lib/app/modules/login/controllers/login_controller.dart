@@ -60,11 +60,8 @@ class LoginController extends GetxController {
               ]);
         }
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found' || e.code == 'wrong-password') {
+        if (e.code.isNotEmpty) {
           Get.snackbar('Terjadi Kesalahan', 'Email atau Password salah');
-          isLoading.value = false;
-        } else {
-          Get.snackbar("Terjadi Kesalahan", "Pegawai tidak ditemukan");
           isLoading.value = false;
         }
       } catch (e) {
