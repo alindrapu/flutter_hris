@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/add_pegawai_controller.dart';
+import 'package:hris/app/routes/app_pages.dart';
 
 class AddPegawaiView extends GetView<AddPegawaiController> {
   const AddPegawaiView({super.key});
@@ -11,6 +12,18 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
       appBar: AppBar(
         title: const Text('Tambah Pegawai'),
         centerTitle: true,
+        leading: Container(
+          margin: const EdgeInsets.all(10),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          child: Center(
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => {
+                Get.offAllNamed(Routes.home),
+              },
+            ),
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(40),
@@ -42,9 +55,18 @@ class AddPegawaiView extends GetView<AddPegawaiController> {
             ),
           ),
           const SizedBox(height: 30),
-          ElevatedButton(
-              onPressed: () => {controller.addPegawai()},
-              child: const Text("Tambah Pegawai")),
+          Obx(
+            () => ElevatedButton(
+              onPressed: () async {
+                if (controller.isLoading.isFalse) {
+                  await controller.addPegawai();
+                }
+              },
+              child: Text(controller.isLoading.isFalse
+                  ? "Tambah Pegawai"
+                  : "Sedang Proses.."),
+            ),
+          )
         ],
       ),
     );

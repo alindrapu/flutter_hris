@@ -3,8 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hris/app/routes/app_pages.dart';
+
 
 class AddPegawaiController extends GetxController {
+  RxBool isLoading = false.obs;
   TextEditingController nipC = TextEditingController();
   TextEditingController namaC = TextEditingController();
   TextEditingController emailC = TextEditingController();
@@ -12,13 +15,15 @@ class AddPegawaiController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  void addPegawai() async {
+  Future<void> addPegawai() async {
     if (kDebugMode) {
       print("testing error");
     }
     if (nipC.text.isNotEmpty &&
         namaC.text.isNotEmpty &&
         emailC.text.isNotEmpty) {
+      isLoading.value = true;
+
       try {
         final credential = await auth.createUserWithEmailAndPassword(
           email: emailC.text,
@@ -38,13 +43,16 @@ class AddPegawaiController extends GetxController {
           Get.snackbar('Berhasil', 'Berhasil menambahkan pegawai');
 
           await credential.user!.sendEmailVerification();
-
+          isLoading.value = false;
+          Get.offAllNamed(Routes.addPegawai);
         }
 
         if (kDebugMode) {
           print(credential);
         }
       } on FirebaseAuthException catch (e) {
+        isLoading.value = false;
+
         if (e.code == 'weak-password') {
           Get.snackbar(
               'Terjadi kesalahan', 'The password provided is too weak.');
@@ -53,9 +61,13 @@ class AddPegawaiController extends GetxController {
               'The account already exists for that email.');
         }
       } catch (e) {
+        isLoading.value = false;
+
         Get.snackbar("Terjadi Kesalahan", "Tidak dapat menambahkan pegawai");
       }
     } else {
+      isLoading.value = false;
+
       Get.snackbar("Terjadi Kesalahan", "NIP, Nama dan Email wajib diisi");
     }
   }

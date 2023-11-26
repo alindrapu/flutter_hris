@@ -33,11 +33,17 @@ class LoginView extends GetView<LoginController> {
                   labelText: "Password", border: OutlineInputBorder()),
             ),
             const SizedBox(height: 30),
-            ElevatedButton(
-                onPressed: () => {
-                      controller.login(),
-                    },
-                child: const Text("Login")),
+            Obx(
+              () => ElevatedButton(
+                onPressed: () async {
+                  if (controller.isLoading.isFalse) {
+                    await controller.login();
+                  }
+                },
+                child: Text(
+                    controller.isLoading.isFalse ? "Masuk" : "Sedang Proses.."),
+              ),
+            ),
             TextButton(
                 onPressed: () {},
                 child: const Text("Lupa password? Klik di sini")),

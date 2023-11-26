@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -14,10 +16,10 @@ void main() async {
 
   runApp(
     StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.idTokenChanges(),
+        stream: FirebaseAuth.instance.userChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const MaterialApp(
+            return  MaterialApp(
               home: Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
@@ -25,10 +27,12 @@ void main() async {
               ),
             );
           }
+          final user = snapshot.data;
           return GetMaterialApp(
+            theme: ThemeData(fontFamily: 'Poppins'),
             debugShowCheckedModeBanner: false,
             title: "Application",
-            initialRoute: snapshot.data != null ? Routes.home : Routes.login,
+            initialRoute: user != null ? Routes.home : Routes.login,
             getPages: AppPages.routes,
           );
         }),
