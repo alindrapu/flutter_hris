@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hris/app/routes/app_pages.dart';
 
-
 class AddPegawaiController extends GetxController {
   RxBool isLoading = false.obs;
   TextEditingController nipC = TextEditingController();
@@ -37,6 +36,7 @@ class AddPegawaiController extends GetxController {
             "namaPegawai": namaC.text,
             "emailPegawai": emailC.text,
             "uid": uid,
+            "role": "pegawai",
             "createdAt": DateTime.now().toIso8601String(),
           });
 

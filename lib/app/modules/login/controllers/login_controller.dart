@@ -43,20 +43,21 @@ class LoginController extends GetxController {
                   child: const Text("Batal"),
                 ),
                 ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        await credential.user!.sendEmailVerification();
-                        Get.back();
-                        Get.snackbar("Berhasil",
-                            "Berhasil mengirim ulang Email Verifikasi, silahkan cek Email Anda yang terdaftar");
-                        isLoading.value = false;
-                      } catch (e) {
-                        isLoading.value = false;
-                        Get.snackbar("Terjadi Kesalahan",
-                            "Hubungi Admin untuk info lebih lanjut");
-                      }
-                    },
-                    child: const Text('Kirim email verifikasi'))
+                  onPressed: () async {
+                    try {
+                      await credential.user!.sendEmailVerification();
+                      Get.back();
+                      Get.snackbar("Berhasil",
+                          "Berhasil mengirim ulang Email Verifikasi, silahkan cek Email Anda yang terdaftar");
+                      isLoading.value = false;
+                    } catch (e) {
+                      isLoading.value = false;
+                      Get.snackbar("Terjadi Kesalahan",
+                          "Hubungi Admin untuk info lebih lanjut");
+                    }
+                  },
+                  child: const Text('Kirim email verifikasi'),
+                )
               ]);
         }
       } on FirebaseAuthException catch (e) {

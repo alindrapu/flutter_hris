@@ -1,4 +1,4 @@
-// ignore_for_file: use_super_parameters, avoid_print
+// ignore_for_file: use_super_parameters, avoid_print, prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -44,49 +44,68 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () async {
-                if (controller.isLoading.isFalse) {
+            onPressed: () async {
+              if (controller.isLoading.isFalse) {
+                try {
                   controller.isLoading.value = true;
                   await FirebaseAuth.instance.signOut();
                   controller.isLoading.value = false;
                   Get.offAllNamed(Routes.login);
+                } catch (e) {
+                  print('Error signing out: $e');
+                  controller.isLoading.value = false;
                 }
-              },
-              icon: const Icon(Icons.logout)),
+              }
+            },
+            icon: const Icon(Icons.logout),
+          ),
         ],
         backgroundColor: Colors.white70,
       ),
       body: Center(
         child: FutureBuilder<String?>(
-            future: getNamaPegawai(currentUser!.uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError || snapshot.data == null) {
-                return const Text('Gagal mengambil nama pegawai');
-              } else {
-                final namaPegawai = snapshot.data!;
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Selamat datang, $namaPegawai',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ],
-                );
-              }
-            }),
-      ),
-      floatingActionButton: Obx(
-        () => FloatingActionButton(
-          onPressed: () => {
-            Get.offAllNamed(Routes.addPegawai),
+          future: getNamaPegawai(currentUser!.uid),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError || snapshot.data == null) {
+              return const Text('Selamat datang, ');
+            } else {
+              final namaPegawai = snapshot.data!;
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Selamat datang, $namaPegawai',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              );
+            }
           },
-          child: controller.isLoading.isFalse
-              ? const Icon(Icons.person_add_rounded)
-              : const CircularProgressIndicator(),
         ),
+      ),
+      floatingActionButton:
+          StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: controller.streamRole(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return SizedBox();
+          }
+          String role = snapshot.data!.data()!["role"];
+          if (role == "admin") {
+            return Obx(
+              () => FloatingActionButton(
+                onPressed: () => Get.offAllNamed(Routes.addPegawai),
+                child: controller.isLoading.isFalse
+                    ? const Icon(Icons.person_add_rounded)
+                    : const CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
     );
   }
