@@ -93,18 +93,43 @@ class HomeView extends GetView<HomeController> {
             return SizedBox();
           }
           String role = snapshot.data!.data()!["role"];
-          if (role == "admin") {
-            return Obx(
-              () => FloatingActionButton(
-                onPressed: () => Get.offAllNamed(Routes.addPegawai),
-                child: controller.isLoading.isFalse
-                    ? const Icon(Icons.person_add_rounded)
-                    : const CircularProgressIndicator(),
-              ),
-            );
-          } else {
-            return const SizedBox();
-          }
+          return Obx(() {
+            if (role == "admin") {
+              return Align(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(width: 20), 
+                    FloatingActionButton(
+                      onPressed: () => Get.offAllNamed(Routes.addPegawai),
+                      child: controller.isLoading.isFalse
+                          ? const Icon(Icons.person_add_rounded)
+                          : const CircularProgressIndicator(),
+                    ),
+                    SizedBox(width: 20), 
+                    FloatingActionButton(
+                      onPressed: () => Get.offAllNamed(Routes.profile),
+                      child: controller.isLoading.isFalse
+                          ? const Icon(Icons.person)
+                          : const CircularProgressIndicator(),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Align(
+                alignment: Alignment.bottomCenter,
+                child: FloatingActionButton(
+                  onPressed: () => Get.offAllNamed(Routes.profile),
+                  child: controller.isLoading.isFalse
+                      ? const Icon(Icons.person)
+                      : const CircularProgressIndicator(),
+                  
+                ),
+              );
+            }
+          });
         },
       ),
     );

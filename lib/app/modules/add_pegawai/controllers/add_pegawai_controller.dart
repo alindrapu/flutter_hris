@@ -7,9 +7,21 @@ import 'package:hris/app/routes/app_pages.dart';
 
 class AddPegawaiController extends GetxController {
   RxBool isLoading = false.obs;
+  RxString jenisKelamin = ''.obs;
+  RxList<DropdownMenuItem<String>> dropdownItems =
+      <DropdownMenuItem<String>>[].obs;
+  TextEditingController namaPegawaiC = TextEditingController();
+  TextEditingController nikC = TextEditingController();
+  TextEditingController emailC = TextEditingController();
+  TextEditingController noTelpC = TextEditingController();
+  TextEditingController tanggalLahirC = TextEditingController();
+  TextEditingController tempatLahirC = TextEditingController();
+  TextEditingController alamatC = TextEditingController();
+  TextEditingController jabatanC = TextEditingController();
+  TextEditingController agamaC = TextEditingController();
+  TextEditingController roleC = TextEditingController();
   TextEditingController nipC = TextEditingController();
   TextEditingController namaC = TextEditingController();
-  TextEditingController emailC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;

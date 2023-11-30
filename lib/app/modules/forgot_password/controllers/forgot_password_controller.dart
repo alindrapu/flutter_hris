@@ -28,6 +28,8 @@ class ForgotPasswordController extends GetxController {
             ),
           ],
         );
+      } else if (emailC.text.isEmpty) {
+        Get.snackbar("Terjadi Kesalahan", "Email harus diisi");
       }
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
