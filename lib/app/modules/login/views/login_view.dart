@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:hris/app/styles/styles.dart';
 
 import 'package:get/get.dart';
 
@@ -11,7 +12,9 @@ class LoginView extends GetView<LoginController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        backgroundColor: Styles.themeDark,
+        foregroundColor: Styles.themeLight,
+        title: const Text('Pedurenan AbsensiNET'),
         centerTitle: true,
       ),
       body: ListView(
@@ -19,10 +22,18 @@ class LoginView extends GetView<LoginController> {
         children: [
           TextField(
             autocorrect: false,
-            controller: controller.emailC,
-            decoration: const InputDecoration(
-              labelText: "Email",
-              border: OutlineInputBorder(),
+            controller: controller.kdAksesC,
+            decoration: InputDecoration(
+              labelText: "Kode Akses",
+              prefixIcon: const Icon(Icons.keyboard_double_arrow_right),
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeDark),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeLight),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
           const SizedBox(height: 30),
@@ -30,12 +41,28 @@ class LoginView extends GetView<LoginController> {
             autocorrect: false,
             controller: controller.passC,
             obscureText: true,
-            decoration: const InputDecoration(
-                labelText: "Password", border: OutlineInputBorder()),
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.lock),
+              labelText: "Kata Sandi",
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeDark),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeLight),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
           ),
           const SizedBox(height: 30),
           Obx(
             () => ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(Styles.themeDark),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Styles.themeLight),
+              ),
               onPressed: () async {
                 if (controller.isLoading.isFalse) {
                   await controller.login();
@@ -49,7 +76,10 @@ class LoginView extends GetView<LoginController> {
               onPressed: () {
                 Get.toNamed(Routes.forgotPassword);
               },
-              child: const Text("Lupa password? Klik di sini")),
+              child: const Text(
+                "Lupa kata sandi? Klik di sini",
+                style: TextStyle(color: Styles.themeDark),
+              )),
         ],
       ),
     );

@@ -7,21 +7,18 @@ import 'package:hris/app/routes/app_pages.dart';
 
 class AddPegawaiController extends GetxController {
   RxBool isLoading = false.obs;
-  RxString jenisKelamin = ''.obs;
-  RxList<DropdownMenuItem<String>> dropdownItems =
-      <DropdownMenuItem<String>>[].obs;
-  TextEditingController namaPegawaiC = TextEditingController();
+  
   TextEditingController nikC = TextEditingController();
+  TextEditingController namaPegawaiC = TextEditingController();
+  TextEditingController alamatC = TextEditingController();
   TextEditingController emailC = TextEditingController();
   TextEditingController noTelpC = TextEditingController();
-  TextEditingController tanggalLahirC = TextEditingController();
   TextEditingController tempatLahirC = TextEditingController();
-  TextEditingController alamatC = TextEditingController();
-  TextEditingController jabatanC = TextEditingController();
+  TextEditingController tanggalLahirC = TextEditingController();
   TextEditingController agamaC = TextEditingController();
+  TextEditingController jabatanC = TextEditingController();
   TextEditingController roleC = TextEditingController();
-  TextEditingController nipC = TextEditingController();
-  TextEditingController namaC = TextEditingController();
+  TextEditingController jenisKelaminC = TextEditingController();
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -30,8 +27,8 @@ class AddPegawaiController extends GetxController {
     if (kDebugMode) {
       print("testing error");
     }
-    if (nipC.text.isNotEmpty &&
-        namaC.text.isNotEmpty &&
+    if (nikC.text.isNotEmpty &&
+        namaPegawaiC.text.isNotEmpty &&
         emailC.text.isNotEmpty) {
       isLoading.value = true;
 
@@ -44,8 +41,8 @@ class AddPegawaiController extends GetxController {
           String uid = credential.user!.uid;
 
           firestore.collection("pegawai").doc(uid).set({
-            "nip": nipC.text,
-            "namaPegawai": namaC.text,
+            "nik": nikC.text,
+            "namaPegawai": namaPegawaiC.text,
             "emailPegawai": emailC.text,
             "uid": uid,
             "role": "pegawai",

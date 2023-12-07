@@ -1,77 +1,83 @@
-import 'package:firebase_auth/firebase_auth.dart';
+// ignore_for_file: avoid_print
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart';
+import 'package:hris/app/config/api.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
-  TextEditingController emailC = TextEditingController();
+  TextEditingController kdAksesC = TextEditingController();
   TextEditingController passC = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
   Future<void> login() async {
-    if (kDebugMode) {
-      print("login berhasil");
-    }
-
-    if (emailC.text.isNotEmpty && passC.text.isNotEmpty) {
+    if (kdAksesC.text.isNotEmpty && passC.text.isNotEmpty) {
       isLoading.value = true;
-      try {
-        // ignore: unused_local_variable
-        final credential = await auth.signInWithEmailAndPassword(
-            email: emailC.text, password: passC.text);
+      String url = Api.login;
 
-        if (credential.user!.emailVerified == true) {
+      Map<String, String> loginData = {
+        'kd_akses': kdAksesC.text,
+        'password': passC.text,
+      };
+
+      String jsonData = jsonEncode(loginData);
+
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonData,
+        );
+
+        if (response.statusCode == 200) {
           isLoading.value = false;
-          if (passC.text == "r4h4s14") {
-            Get.offAllNamed(Routes.newPassword);
+          Get.offAllNamed(Routes.home);
+
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final String token = responseData['token'];
+          final int isAdmin = responseData['user']['is_admin'];
+          final String nama = responseData['user']['nama'];
+          final String email = responseData['user']['email'];
+
+          await storeUserData(token, isAdmin, nama, email);
+
+          if (passC.text == "rahasia" &&
+              responseData['user']['added_kd_akses'] == 0) {
+            Get.offAllNamed(Routes.newKdPass);
           } else {
             Get.offAllNamed(Routes.home);
           }
         } else {
-          Get.defaultDialog(
-              title: "Belum Verifikasi",
-              middleText: "Anda belum melakukan verifikasi email",
-              actions: [
-                OutlinedButton(
-                  onPressed: () {
-                    isLoading.value = false;
-                    Get.back();
-                  },
-                  child: const Text("Batal"),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await credential.user!.sendEmailVerification();
-                      Get.back();
-                      Get.snackbar("Berhasil",
-                          "Berhasil mengirim ulang Email Verifikasi, silahkan cek Email Anda yang terdaftar");
-                      isLoading.value = false;
-                    } catch (e) {
-                      isLoading.value = false;
-                      Get.snackbar("Terjadi Kesalahan",
-                          "Hubungi Admin untuk info lebih lanjut");
-                    }
-                  },
-                  child: const Text('Kirim email verifikasi'),
-                )
-              ]);
-        }
-      } on FirebaseAuthException catch (e) {
-        if (e.code.isNotEmpty) {
-          Get.snackbar('Terjadi Kesalahan', 'Email atau Password salah');
           isLoading.value = false;
+          throw Exception('"Terjadi Kesalahan" : ${response.body}');
         }
       } catch (e) {
-        Get.snackbar("Terjadi Kesalahan", "Tidak dapat login, coba lagi nanti");
+        String errorMessage = 'Error occurred';
+        try {
+          Map<String, dynamic> errorMap = json.decode(e.toString());
+          errorMessage = errorMap['message'] ?? 'Terjadi Kesalahan';
+        } catch (error) {
+          print('Error JSON: $error');
+        }
+        print(errorMessage);
         isLoading.value = false;
+        Get.snackbar("Terjadi Kesalahan", "Gagal melakukan login. $e");
       }
     } else {
       Get.snackbar("Terjadi Kesalahan", "Email dan Password harus diisi!");
       isLoading.value = false;
     }
+  }
+
+  Future<void> storeUserData(String token, int isAdmin, String nama, String email) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('token', token);
+    prefs.setInt('is_admin', isAdmin);
+    prefs.setString('nama', nama);
+    prefs.setString('email', email);
   }
 }

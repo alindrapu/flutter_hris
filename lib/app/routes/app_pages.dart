@@ -8,6 +8,10 @@ import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/new_kd_akses/bindings/new_kd_akses_binding.dart';
+import '../modules/new_kd_akses/views/new_kd_akses_view.dart';
+import '../modules/new_kd_pass/bindings/new_kd_pass_binding.dart';
+import '../modules/new_kd_pass/views/new_kd_pass_view.dart';
 import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
@@ -64,6 +68,16 @@ class AppPages {
       name: _Paths.updateProfile,
       page: () => const UpdateProfileView(),
       binding: UpdateProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.newKdAkses,
+      page: () => const NewKdAksesView(),
+      binding: NewKdAksesBinding(),
+    ),
+    GetPage(
+      name: _Paths.newKdPass,
+      page: () => const NewKdPassView(),
+      binding: NewKdPassBinding(),
     ),
   ];
 }

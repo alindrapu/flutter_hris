@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/styles/styles.dart';
 
-import '../controllers/new_password_controller.dart';
+import '../controllers/new_kd_pass_controller.dart';
 
-class NewPasswordView extends GetView<NewPasswordController> {
-  const NewPasswordView({super.key});
+class NewKdPassView extends GetView<NewKdPassController> {
+  const NewKdPassView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +52,38 @@ class NewPasswordView extends GetView<NewPasswordController> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            TextField(
+              autocorrect: false,
+              controller: controller.newKdAksesC,
+              decoration: InputDecoration(
+                labelText: "Kode Akses",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeDark),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeLight),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              autocorrect: false,
+              controller: controller.confirmKdAksesC,
+              decoration: InputDecoration(
+                labelText: "Konfirmasi Kode Akses",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeDark),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeLight),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
             const SizedBox(height: 30),
             Obx(
                   () => ElevatedButton(
@@ -63,7 +95,7 @@ class NewPasswordView extends GetView<NewPasswordController> {
                 ),
                 onPressed: () async {
                   if (controller.isLoading.isFalse) {
-                    await controller.newPassword();
+                    await controller.newKdPass();
                   }
                 },
                 child: Text(

@@ -2,17 +2,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:hris/app/data/models/user_details.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controllers/profile_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
+  Future<UserDetails?> getUserDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? email = prefs.getString('email');
+    final String? nama = prefs.getString('nama');
+    final String? token = prefs.getString('token');
+
+    if (email != null && nama != null && token != null) {
+      return UserDetails(email: email, nama: nama, token: token);
+    } else {
+      return null;
+    }
+  }
+
   const ProfileView({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Profile Pegawai'),
+          title: const Text('Profil Pegawai'),
           centerTitle: true,
           leading: Container(
             margin: const EdgeInsets.all(10),
@@ -75,18 +90,18 @@ class ProfileView extends GetView<ProfileController> {
                       leading: const Icon(Icons.person_add),
                       title: const Text("Tambah Pegawai"),
                     ),
-                    const SizedBox(height: 10),
-                    ListTile(
-                      onTap: () {},
-                      leading: const Icon(Icons.person_add),
-                      title: const Text("Rekap Absensi Pegawai"),
-                    ),
-                    const SizedBox(height: 10),
-                    ListTile(
-                      onTap: () {},
-                      leading: const Icon(Icons.person_add),
-                      title: const Text("Approval Cuti Pegawai"),
-                    ),
+                  const SizedBox(height: 10),
+                  ListTile(
+                    onTap: () {},
+                    leading: const Icon(Icons.person_add),
+                    title: const Text("Rekap Absensi Pegawai"),
+                  ),
+                  const SizedBox(height: 10),
+                  ListTile(
+                    onTap: () {},
+                    leading: const Icon(Icons.person_add),
+                    title: const Text("Approval Cuti Pegawai"),
+                  ),
                   const SizedBox(height: 10),
                   ListTile(
                     onTap: () => controller.logout(),
