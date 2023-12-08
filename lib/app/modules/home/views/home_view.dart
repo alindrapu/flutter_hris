@@ -19,7 +19,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Styles.themeDark,
           title: const Text(
@@ -38,7 +37,7 @@ class HomeView extends GetView<HomeController> {
                   foregroundColor:
                       MaterialStateProperty.all<Color>(Styles.themeLight),
                 ),
-                onPressed: () => Get.toNamed(Routes.addPegawai),
+                onPressed: () => Get.toNamed(Routes.profile),
                 icon: const Icon(Icons.person)),
           ],
         ),

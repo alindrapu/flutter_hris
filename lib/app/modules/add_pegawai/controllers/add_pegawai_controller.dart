@@ -1,73 +1,95 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hris/app/data/models/user_details.dart';
+import 'package:http/http.dart' as http;
+import 'package:hris/app/config/api.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddPegawaiController extends GetxController {
   RxBool isLoading = false.obs;
-  
-  TextEditingController nikC = TextEditingController();
-  TextEditingController namaPegawaiC = TextEditingController();
-  TextEditingController alamatC = TextEditingController();
-  TextEditingController emailC = TextEditingController();
-  TextEditingController noTelpC = TextEditingController();
-  TextEditingController tempatLahirC = TextEditingController();
-  TextEditingController tanggalLahirC = TextEditingController();
-  TextEditingController agamaC = TextEditingController();
-  TextEditingController jabatanC = TextEditingController();
-  TextEditingController roleC = TextEditingController();
-  TextEditingController jenisKelaminC = TextEditingController();
+  final nikC = TextEditingController();
+  final kdAksesC = TextEditingController();
+  final namaPegawaiC = TextEditingController();
+  final alamatC = TextEditingController();
+  final emailC = TextEditingController();
+  final noTelpC = TextEditingController();
+  final tempatLahirC = TextEditingController();
+  final tanggalLahirC = TextEditingController();
+  final agamaC = TextEditingController();
+  final jabatanC = TextEditingController();
+  final roleC = TextEditingController();
+  final jenisKelaminC = TextEditingController();
+  final stsKepegC = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Future<UserDetails?> getUserDetails() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? email = prefs.getString('email');
+    final String? nama = prefs.getString('nama');
+    final String? token = prefs.getString('token');
+
+    if (email != null && nama != null && token != null) {
+      return UserDetails(email: email, nama: nama, token: token);
+    } else {
+      return null;
+    }
+  }
 
   Future<void> addPegawai() async {
-    if (kDebugMode) {
-      print("testing error");
-    }
+    UserDetails? userDetails = await getUserDetails();
+
     if (nikC.text.isNotEmpty &&
         namaPegawaiC.text.isNotEmpty &&
-        emailC.text.isNotEmpty) {
+        alamatC.text.isNotEmpty &&
+        alamatC.text.isNotEmpty &&
+        emailC.text.isNotEmpty &&
+        noTelpC.text.isNotEmpty &&
+        tempatLahirC.text.isNotEmpty &&
+        tanggalLahirC.text.isNotEmpty &&
+        agamaC.text.isNotEmpty &&
+        jabatanC.text.isNotEmpty &&
+        roleC.text.isNotEmpty &&
+        jenisKelaminC.text.isNotEmpty &&
+        jenisKelaminC.text.isNotEmpty &&
+        kdAksesC.text.isNotEmpty &&
+        stsKepegC.text.isNotEmpty) {
+
       isLoading.value = true;
+      final Map<String, dynamic> body = {
+        "user_id": nikC.text,
+        "kd_akses": kdAksesC.text,
+        "nama": namaPegawaiC.text,
+        "email": emailC.text,
+        "nik": nikC.text,
+        "telp": noTelpC.text,
+        "tempat_lahir": tempatLahirC.text,
+        "tanggal_lahir": tanggalLahirC.text,
+        "jenis_kelamin": jenisKelaminC.text,
+        "alamat": alamatC.text,
+        "is_admin": int.tryParse(roleC.text),
+        "kd_agama": int.tryParse(agamaC.text),
+        "kd_jabatan": jabatanC.text,
+        "sts_kepeg": int.tryParse(stsKepegC.text)
+      };
+
+      final Map<String, String> headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${userDetails?.token ?? ''}',
+        'Content-Type': 'application/json',
+      };
+
+      String jsonBody = jsonEncode(body);
+      String url = Api.addPegawaiCurrent;
 
       try {
-        final credential = await auth.createUserWithEmailAndPassword(
-          email: emailC.text,
-          password: 'r4h4s14',
-        );
-        if (credential.user != null) {
-          String uid = credential.user!.uid;
+        final response =
+            await http.post(Uri.parse(url), headers: headers, body: jsonBody);
 
-          firestore.collection("pegawai").doc(uid).set({
-            "nik": nikC.text,
-            "namaPegawai": namaPegawaiC.text,
-            "emailPegawai": emailC.text,
-            "uid": uid,
-            "role": "pegawai",
-            "createdAt": DateTime.now().toIso8601String(),
-          });
-
-          Get.snackbar('Berhasil', 'Berhasil menambahkan pegawai');
-
-          await credential.user!.sendEmailVerification();
-          isLoading.value = false;
+        if (response.statusCode == 200) {
+          Get.snackbar("Berhasil", "Pegawai baru berhasil ditambahkan");
           Get.offAllNamed(Routes.addPegawai);
-        }
-
-        if (kDebugMode) {
-          print(credential);
-        }
-      } on FirebaseAuthException catch (e) {
-        isLoading.value = false;
-
-        if (e.code == 'weak-password') {
-          Get.snackbar(
-              'Terjadi kesalahan', 'The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          Get.snackbar('Terjadi Kesalahan',
-              'The account already exists for that email.');
         }
       } catch (e) {
         isLoading.value = false;

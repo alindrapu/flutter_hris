@@ -60,12 +60,12 @@ class NewKdPassController extends GetxController {
               await http.put(Uri.parse(url), headers: headers, body: jsonData);
 
           if (response.statusCode == 200) {
-            Get.snackbar("Berhasil", "Password berhasil diubah");
+            Get.snackbar("Berhasil", "Password dan Kode Akses berhasil diubah");
             Get.offAllNamed(Routes.home);
           }
         } catch (e) {
           Get.snackbar("Terjadi Kesalahan",
-              "Tidak dapat mengubah password, silahkan coba lagi nanti");
+              "Tidak mengubah data, silahkan coba lagi nanti");
         }
       } else if (!alphanumeric.hasMatch(newKdAksesC.text)) {
         Get.snackbar(
