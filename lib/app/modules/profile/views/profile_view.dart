@@ -1,103 +1,145 @@
+// ignore_for_file: avoid_unnecessary_containers, sized_box_for_whitespace
+
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:hris/app/styles/styles.dart';
 
 import '../controllers/profile_controller.dart';
+import '../../../controllers/page_index_controller.dart';
 
 class ProfileView extends GetView<ProfileController> {
-  const ProfileView({super.key});
+  final pageC = Get.find<PageIndexController>();
+
+  ProfileView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Styles.themeDark,
+        foregroundColor: Styles.themeLight,
         title: const Text('Profil Pegawai'),
         centerTitle: true,
-        leading: Container(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-          child: Center(
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () => {
-                Get.offAllNamed(Routes.home),
-              },
-            ),
-          ),
+      ),
+      body: Container(
+        child: FutureBuilder<Map<String, dynamic>>(
+          future: controller.getUserDetails(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              final userDetails = snapshot.data;
+
+              return ListView(
+                padding: const EdgeInsets.all(30),
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          width: 150,
+                          height: 150,
+                          child: Image.asset('assets/img/def_ava.jpg'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    userDetails!['nama'].toString().toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 25,
+                        color: Styles.themeDark,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    userDetails['jabatan'].toString(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Styles.themeDark,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ListTile(
+                    iconColor: Styles.themeDark,
+                    textColor: Styles.themeDark,
+                    onTap: () => Get.toNamed(Routes.updateProfile),
+                    leading: const Icon(Icons.person),
+                    title: const Text("Ubah Profil Pegawai"),
+                  ),
+                  const SizedBox(height: 10),
+                  ListTile(
+                    iconColor: Styles.themeDark,
+                    textColor: Styles.themeDark,
+                    onTap: () => Get.toNamed(Routes.updatePassword),
+                    leading: const Icon(Icons.vpn_key),
+                    title: const Text("Ubah Password"),
+                  ),
+                  const SizedBox(height: 10),
+                  if (userDetails['is_admin'].toString() == '1')
+                    ListTile(
+                      iconColor: Styles.themeDark,
+                      textColor: Styles.themeDark,
+                      onTap: () => {Get.toNamed(Routes.addPegawai)},
+                      leading: const Icon(Icons.person_add),
+                      title: const Text("Tambah Pegawai"),
+                    ),
+                  if (userDetails['is_admin'].toString() == '1')
+                    const SizedBox(height: 10),
+                  if (userDetails['is_admin'].toString() == '1')
+                    ListTile(
+                      iconColor: Styles.themeDark,
+                      textColor: Styles.themeDark,
+                      onTap: () {},
+                      leading: const Icon(Icons.note_add_rounded),
+                      title: const Text("Rekap Absensi Pegawai"),
+                    ),
+                  if (userDetails['is_admin'].toString() == '1')
+                    const SizedBox(height: 10),
+                  if (userDetails['is_admin'].toString() == '1')
+                    ListTile(
+                      iconColor: Styles.themeDark,
+                      textColor: Styles.themeDark,
+                      onTap: () {},
+                      leading: const Icon(Icons.approval_rounded),
+                      title: const Text("Approval Cuti Pegawai"),
+                    ),
+                  if (userDetails['is_admin'].toString() == '1')
+                    const SizedBox(height: 10),
+                  ListTile(
+                    iconColor: Colors.redAccent,
+                    textColor: Colors.redAccent,
+                    onTap: () => controller.logout(),
+                    leading: const Icon(Icons.logout),
+                    title: const Text("Keluar"),
+                  ),
+                ],
+              );
+            }
+          },
         ),
       ),
-      body: FutureBuilder<Map<String, dynamic>>(
-        future: controller.getUserDetails(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            final userDetails = snapshot.data;
-
-            return ListView(
-              padding: const EdgeInsets.all(30),
-              children: [
-                const CircleAvatar(
-                  radius: 70,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  userDetails!['nama'].toString().toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 25,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  userDetails['jabatan'].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                ListTile(
-                  onTap: () => Get.toNamed(Routes.updateProfile),
-                  leading: const Icon(Icons.person),
-                  title: const Text("Ubah Profil Pegawai"),
-                ),
-                const SizedBox(height: 10),
-                ListTile(
-                  onTap: () => Get.toNamed(Routes.updatePassword),
-                  leading: const Icon(Icons.vpn_key),
-                  title: const Text("Ubah Password"),
-                ),
-                if (userDetails['is_admin'] == 1)
-                  ListTile(
-                    onTap: () {},
-                    leading: const Icon(Icons.person_add),
-                    title: const Text("Tambah Pegawai"),
-                  ),
-                const SizedBox(height: 10),
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.person_add),
-                  title: const Text("Rekap Absensi Pegawai"),
-                ),
-                const SizedBox(height: 10),
-                ListTile(
-                  onTap: () {},
-                  leading: const Icon(Icons.person_add),
-                  title: const Text("Approval Cuti Pegawai"),
-                ),
-                const SizedBox(height: 10),
-                ListTile(
-                  onTap: () => controller.logout(),
-                  leading: const Icon(Icons.logout),
-                  title: const Text("Keluar"),
-                ),
-              ],
-            );
-          }
-        },
+      bottomNavigationBar: ConvexAppBar(
+        style: TabStyle.fixedCircle,
+        items: const [
+          TabItem(icon: Icons.home, title: 'Beranda'),
+          TabItem(icon: Icons.fingerprint_rounded, title: 'Absen'),
+          TabItem(icon: Icons.people, title: 'Profil'),
+        ],
+        backgroundColor: Styles.themeDark,
+        color: Styles.themeLight,
+        initialActiveIndex: pageC.pageIndex.value,
+        onTap: (int i) => pageC.changePage(i),
       ),
     );
   }

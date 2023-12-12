@@ -39,6 +39,19 @@ class AddPegawaiController extends GetxController {
 
   Future<void> addPegawai() async {
     UserDetails? userDetails = await getUserDetails();
+    print("NIK: ${nikC.text}");
+    print("Nama Pegawai: ${namaPegawaiC.text}");
+    print("Alamat: ${alamatC.text}");
+    print("Email: ${emailC.text}");
+    print("No Telp: ${noTelpC.text}");
+    print("Tempat Lahir: ${tempatLahirC.text}");
+    print("Tanggal Lahir: ${tanggalLahirC.text}");
+    print("Agama: ${agamaC.text}");
+    print("Jabatan: ${jabatanC.text}");
+    print("Role: ${roleC.text}");
+    print("Jenis Kelamin: ${jenisKelaminC.text}");
+    print("Kode Akses: ${kdAksesC.text}");
+    print("Status Kepegawaian: ${stsKepegC.text}");
 
     if (nikC.text.isNotEmpty &&
         namaPegawaiC.text.isNotEmpty &&
@@ -52,13 +65,11 @@ class AddPegawaiController extends GetxController {
         jabatanC.text.isNotEmpty &&
         roleC.text.isNotEmpty &&
         jenisKelaminC.text.isNotEmpty &&
-        jenisKelaminC.text.isNotEmpty &&
         kdAksesC.text.isNotEmpty &&
         stsKepegC.text.isNotEmpty) {
-
       isLoading.value = true;
       final Map<String, dynamic> body = {
-        "user_id": nikC.text,
+        // "user_id": nikC.text,
         "kd_akses": kdAksesC.text,
         "nama": namaPegawaiC.text,
         "email": emailC.text,
@@ -68,10 +79,12 @@ class AddPegawaiController extends GetxController {
         "tanggal_lahir": tanggalLahirC.text,
         "jenis_kelamin": jenisKelaminC.text,
         "alamat": alamatC.text,
-        "is_admin": int.tryParse(roleC.text),
-        "kd_agama": int.tryParse(agamaC.text),
-        "kd_jabatan": jabatanC.text,
-        "sts_kepeg": int.tryParse(stsKepegC.text)
+        "is_admin": (roleC.text == "Admin" ? 1 : 0),
+        "nm_agama": agamaC.text,
+        "nm_jabatan": jabatanC.text,
+        "sts_kepeg": stsKepegC.text,
+        "password": "rahasia",
+        "added_kd_akses": 0
       };
 
       final Map<String, String> headers = {
@@ -81,7 +94,7 @@ class AddPegawaiController extends GetxController {
       };
 
       String jsonBody = jsonEncode(body);
-      String url = Api.addPegawaiCurrent;
+      String url = Api.register;
 
       try {
         final response =

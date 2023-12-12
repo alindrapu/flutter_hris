@@ -51,10 +51,9 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
         children: [
           TextField(
             autocorrect: false,
-            controller: controller.nikC,
+            controller: controller.kdAksesC,
             decoration: InputDecoration(
-              labelText: "NIK",
-              labelStyle: const TextStyle(color: Styles.themeDark),
+              labelText: "Kode Akses",
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Styles.themeDark),
                 borderRadius: BorderRadius.circular(15),
@@ -71,6 +70,23 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             controller: controller.namaPegawaiC,
             decoration: InputDecoration(
               labelText: "Nama Pegawai",
+              enabledBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeDark),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Styles.themeLight),
+                borderRadius: BorderRadius.circular(9),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            autocorrect: false,
+            controller: controller.nikC,
+            decoration: InputDecoration(
+              labelText: "NIK",
+              labelStyle: const TextStyle(color: Styles.themeDark),
               enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Styles.themeDark),
                 borderRadius: BorderRadius.circular(15),
@@ -168,7 +184,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
                 firstDate: DateTime(1900),
                 lastDate: DateTime(2100),
               );
-      
+
               if (picked != null) {
                 setState(() {
                   controller.tanggalLahirC.text =
@@ -188,18 +204,18 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             ),
             asyncItems: (String filter) async {
               String url = Api.listAgama;
-      
+
               var response = await http.get(Uri.parse(url));
-              List allAgama = (json.decode(response.body)
-                  as Map<String, dynamic>)['value'];
+              List allAgama =
+                  (json.decode(response.body) as Map<String, dynamic>)['value'];
               List<Agama> agama = [];
-      
+
               allAgama.forEach((element) {
                 agama.add(Agama(
                     nmAgama: element['nm_agama'],
                     kdAgama: element['kd_agama']));
               });
-      
+
               return agama;
             },
             itemAsString: (Agama agama) => agama.nmAgama,
@@ -207,7 +223,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
           const SizedBox(height: 20),
           DropdownSearch<Jabatan>(
             popupProps: const PopupProps.dialog(),
-            onChanged: (value) => {controller.agamaC.text = value!.nmJabatan},
+            onChanged: (value) => {controller.jabatanC.text = value!.nmJabatan},
             dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Jabatan",
@@ -215,18 +231,18 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             ),
             asyncItems: (String filter) async {
               String url = Api.listJabatan;
-      
+
               var response = await http.get(Uri.parse(url));
-              List allJabatan = (json.decode(response.body)
-                  as Map<String, dynamic>)['value'];
+              List allJabatan =
+                  (json.decode(response.body) as Map<String, dynamic>)['value'];
               List<Jabatan> jabatan = [];
-      
+
               allJabatan.forEach((element) {
                 jabatan.add(Jabatan(
                     nmJabatan: element['nm_jabatan'],
                     kdJabatan: element['kd_jabatan']));
               });
-      
+
               return jabatan;
             },
             itemAsString: (Jabatan jabatan) => jabatan.nmJabatan,
@@ -250,6 +266,17 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             dropdownDecoratorProps: const DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 labelText: "Role User",
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          DropdownSearch<String>(
+            items: const ["Aktif", "Tidak Aktif"],
+            popupProps: const PopupProps.dialog(),
+            onChanged: (value) => {controller.stsKepegC.text = value!},
+            dropdownDecoratorProps: const DropDownDecoratorProps(
+              dropdownSearchDecoration: InputDecoration(
+                labelText: "Status Kepegawaian",
               ),
             ),
           ),

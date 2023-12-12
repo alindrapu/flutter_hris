@@ -42,8 +42,8 @@ class ProfileController extends GetxController {
           headers: {'Authorization': 'Bearer ${userDetails['token']}'});
 
       if (response.statusCode == 200) {
+        Get.snackbar("Berhasil", "Anda telah logout! Silahkan login kembali");
         Get.toNamed(Routes.login);
-        print(response.body);
       }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "gagal melakukan logout = $e");

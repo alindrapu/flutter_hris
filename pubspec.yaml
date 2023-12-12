@@ -17,6 +17,7 @@ dependencies:
   shared_preferences: ^2.0.7
   intl: ^0.18.1
   dropdown_search: ^5.0.6
+  convex_bottom_bar: ^3.2.0
   flutter: 
     sdk: flutter
 
@@ -28,6 +29,9 @@ dev_dependencies:
 
 flutter: 
   uses-material-design: true
+  assets:
+    - assets/
+    - assets/img/
   fonts:
     - family: Poppins
       fonts:

@@ -1,6 +1,6 @@
 class Api {
   static const _baseUrl =
-      "https://6e27-2400-9800-4c2-697d-4c40-a758-ad7e-9b6e.ngrok-free.app/api";
+      "https://b010-2400-9800-170-f00b-f1ad-329e-fa79-b5d2.ngrok-free.app/api";
   static const login = "$_baseUrl/login";
   static const register = "$_baseUrl/register";
   static const logout = "$_baseUrl/logout";
