@@ -14,6 +14,7 @@ abstract class Routes {
   static const updateProfile = _Paths.updateProfile;
   static const newKdAkses = _Paths.newKdAkses;
   static const newKdPass = _Paths.newKdPass;
+  static const DETAIL_PRESENSI = _Paths.DETAIL_PRESENSI;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const updateProfile = '/update-profile';
   static const newKdAkses = '/new-kd-akses';
   static const newKdPass = '/new-kd-pass';
+  static const DETAIL_PRESENSI = '/detail-presensi';
 }
