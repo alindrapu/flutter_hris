@@ -82,7 +82,7 @@ class AppPages {
       binding: NewKdPassBinding(),
     ),
     GetPage(
-      name: _Paths.DETAIL_PRESENSI,
+      name: _Paths.detailPresensi,
       page: () => const DetailPresensiView(),
       binding: DetailPresensiBinding(),
     ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/data/models/user_details.dart';
@@ -39,19 +40,21 @@ class AddPegawaiController extends GetxController {
 
   Future<void> addPegawai() async {
     UserDetails? userDetails = await getUserDetails();
-    print("NIK: ${nikC.text}");
-    print("Nama Pegawai: ${namaPegawaiC.text}");
-    print("Alamat: ${alamatC.text}");
-    print("Email: ${emailC.text}");
-    print("No Telp: ${noTelpC.text}");
-    print("Tempat Lahir: ${tempatLahirC.text}");
-    print("Tanggal Lahir: ${tanggalLahirC.text}");
-    print("Agama: ${agamaC.text}");
-    print("Jabatan: ${jabatanC.text}");
-    print("Role: ${roleC.text}");
-    print("Jenis Kelamin: ${jenisKelaminC.text}");
-    print("Kode Akses: ${kdAksesC.text}");
-    print("Status Kepegawaian: ${stsKepegC.text}");
+    if (kDebugMode) {
+      print("NIK: ${nikC.text}");
+      print("Nama Pegawai: ${namaPegawaiC.text}");
+      print("Alamat: ${alamatC.text}");
+      print("Email: ${emailC.text}");
+      print("No Telp: ${noTelpC.text}");
+      print("Tempat Lahir: ${tempatLahirC.text}");
+      print("Tanggal Lahir: ${tanggalLahirC.text}");
+      print("Agama: ${agamaC.text}");
+      print("Jabatan: ${jabatanC.text}");
+      print("Role: ${roleC.text}");
+      print("Jenis Kelamin: ${jenisKelaminC.text}");
+      print("Kode Akses: ${kdAksesC.text}");
+      print("Status Kepegawaian: ${stsKepegC.text}");
+    }
 
     if (nikC.text.isNotEmpty &&
         namaPegawaiC.text.isNotEmpty &&

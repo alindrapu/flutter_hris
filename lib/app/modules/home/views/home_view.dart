@@ -3,6 +3,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:intl/intl.dart';
 import '../../../controllers/page_index_controller.dart';
@@ -101,7 +102,7 @@ class HomeView extends GetView<HomeController> {
                   ],
                   borderRadius:
                       const BorderRadius.only(topLeft: Radius.circular(80)),
-                  color: const Color.fromARGB(255, 194, 110, 110)),
+                  color: Styles.themeDark),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -110,7 +111,7 @@ class HomeView extends GetView<HomeController> {
                       const Text(
                         'MASUK\n',
                         style: TextStyle(
-                          color: Styles.themeDark,
+                          color: Styles.themeLight,
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -118,7 +119,7 @@ class HomeView extends GetView<HomeController> {
                       Text(
                         DateFormat.Hm().format(DateTime.now()),
                         style: const TextStyle(
-                          color: Styles.themeDark,
+                          color: Colors.white70,
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                         ),
@@ -128,21 +129,21 @@ class HomeView extends GetView<HomeController> {
                   Container(
                     width: 5,
                     height: 50,
-                    color: Styles.themeDark,
+                    color: Styles.themeLight,
                   ),
                   Column(
                     children: [
                       const Text(
                         'KELUAR\n',
                         style: TextStyle(
-                            color: Styles.themeDark,
+                            color: Styles.themeLight,
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       ),
                       Text(
                         DateFormat.Hm().format(DateTime.now()),
                         style: const TextStyle(
-                          color: Styles.themeDark,
+                          color: Colors.white70,
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
                         ),
@@ -155,7 +156,7 @@ class HomeView extends GetView<HomeController> {
             const SizedBox(height: 20),
             const Divider(
               thickness: 2,
-              color: Styles.themeDark,
+              color: Styles.themeLight,
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width - 20,
@@ -188,38 +189,56 @@ class HomeView extends GetView<HomeController> {
               itemCount: 5,
               itemBuilder: (context, index) {
                 return Container(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
-                  margin:
-                      const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                      color: Color.fromARGB(255, 96, 154, 179)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Masuk",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              DateFormat.yMMMEd().format(DateTime.now()),
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Material(
+                      color: Styles.themeTeal,
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed(Routes.detailPresensi);
+                        },
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20)),
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            // color: Color.fromARGB(255, 96, 154, 179)
+                          ),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Masuk",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      DateFormat.yMMMEd()
+                                          .format(DateTime.now()),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                                Text(DateFormat.Hm().format(DateTime.now())),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  "Keluar",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(DateFormat.Hm().format(DateTime.now())),
+                              ]),
                         ),
-                        Text(DateFormat.Hm().format(DateTime.now())),
-                        const SizedBox(height: 10),
-                        const Text(
-                          "Keluar",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(DateFormat.Hm().format(DateTime.now())),
-                      ]),
+                      ),
+                    ),
+                  ),
                 );
               },
             ),

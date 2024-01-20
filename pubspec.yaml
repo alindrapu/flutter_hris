@@ -19,6 +19,7 @@ dependencies:
   dropdown_search: ^5.0.6
   intl: ^0.19.0
   convex_bottom_bar: ^3.2.0
+  geolocator: 10.1.0
   flutter: 
     sdk: flutter
 
@@ -27,15 +28,13 @@ dev_dependencies:
   flutter_test: 
     sdk: flutter
 
-
 flutter: 
-  uses-material-design: true
-  assets:
+  assets: 
     - assets/
     - assets/img/
-  fonts:
+  fonts: 
     - family: Poppins
-      fonts:
+      fonts: 
         - asset: fonts/Poppins-Bold.ttf
           weight: 700
         - asset: fonts/Poppins-Medium.ttf
@@ -44,5 +43,5 @@ flutter:
           weight: 400
         - asset: fonts/Poppins-SemiBold.ttf
           weight: 600
+  uses-material-design: true
 
- 
