@@ -1,53 +1,24 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:hris/app/data/models/user_details.dart';
+import 'package:hris/app/config/api.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
-
-  void changePage(int i) async {
-    if (kDebugMode) {
-      print('click index = $i');
-    }
-    switch (i) {
-      case 1:
-        Map<String, dynamic> userData = await getUserDetails();
-        final userDetail = userData;
-        print("${userDetail}");
-        Map<String, dynamic> response = await determinePosition();
-        if (response["error"] != true) {
-          Position position = response["position"];
-          print("${position.latitude}");
-          print("${position.longitude}");
-        } else {
-          Get.snackbar("Terjadi Kesalahan", response["message"]);
-        }
-        break;
-      case 2:
-        pageIndex.value = i;
-        Get.toNamed(Routes.profile);
-        break;
-      default:
-        pageIndex.value = i;
-        Get.toNamed(Routes.home);
-    }
-  }
 
   Future<Map<String, dynamic>> getUserDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return {
       'nama': prefs.getString('nama'),
-      'jabatan': prefs.getString('nm_jabatan'),
-      'agama': prefs.getString('nm_agama'),
-      'is_admin': prefs.getInt('is_admin'),
+      'kd_akses': prefs.getString('kd_akses'),
       'token': prefs.getString('token')
     };
   }
-
-  Future<void> updatePosition() async {}
 
   Future<Map<String, dynamic>> determinePosition() async {
     bool serviceEnabled;
@@ -77,7 +48,7 @@ class PageIndexController extends GetxController {
         // your App should show an explanatory UI now.
         return {
           "message":
-              "Gagal mendapatkan lokasi, aktifkan GPS pada perangkat Anda!",
+              "Gagal mendapatkan lokasi, berikan izin untuk mendapatkan lokasi perangkat!",
           "error": true
         };
       }
@@ -87,7 +58,7 @@ class PageIndexController extends GetxController {
       // Permissions are denied forever, handle appropriately.
       return {
         "message":
-            "Gagal mendapatkan lokasi, aktifkan GPS pada perangkat Anda!",
+            "Gagal mendapatkan lokasi, berikan izin untuk mendapatkan lokasi perangkat!",
         "error": true
       };
     }
@@ -95,5 +66,65 @@ class PageIndexController extends GetxController {
     // continue accessing the position of the device.
     Position position = await Geolocator.getCurrentPosition();
     return {"position": position, "error": false};
+  }
+
+  Future<void> updatePosition(Position position) async {
+    Map<String, dynamic> userData = await getUserDetails();
+    final userDetails = userData;
+
+    final Map<String, dynamic> body = {
+      "kd_akses": userDetails['kd_akses'],
+      "latitude": "${position.latitude}",
+      "longitude": "${position.longitude}",
+    };
+
+    final Map<String, String> headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer ${userDetails["token"]}",
+      "Content-Type": "application/json",
+    };
+
+    String jsonBody = jsonEncode(body);
+    String url = Api.updateCurrentPosition;
+
+    if (kDebugMode) {
+      print(headers);
+    }
+
+    try {
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: jsonBody);
+      if (response.statusCode == 200) {
+        Get.snackbar("Berhasil", "Berhasil memperbarui posisi terakhir");
+      }
+    } catch (e) {
+      Get.snackbar("Terjadi Kesalahan", "Gagal memperbarui possi terakhir");
+    }
+  }
+
+  void changePage(int i) async {
+    switch (i) {
+      case 1:
+        Map<String, dynamic> response = await determinePosition();
+        if (response["error"] != true) {
+          Position position = response["position"];
+          await updatePosition(position);
+
+          // if (kDebugMode) {
+          //   print("${position.latitude}");
+          //   print("${position.longitude}");
+          // }
+        } else {
+          Get.snackbar("Terjadi Kesalahan", response["message"]);
+        }
+        break;
+      case 2:
+        pageIndex.value = i;
+        Get.toNamed(Routes.profile);
+        break;
+      default:
+        pageIndex.value = i;
+        Get.toNamed(Routes.home);
+    }
   }
 }
