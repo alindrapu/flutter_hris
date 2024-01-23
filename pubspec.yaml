@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.18.1
   convex_bottom_bar: ^3.2.0
   geolocator: 10.1.0
+  geocoding: ^2.1.1
   local_auth: ^2.1.8
   flutter: 
     sdk: flutter

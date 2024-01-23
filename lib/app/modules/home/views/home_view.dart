@@ -7,7 +7,6 @@ import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:intl/intl.dart';
 import '../../../controllers/page_index_controller.dart';
-
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -34,56 +33,62 @@ class HomeView extends GetView<HomeController> {
               child: Column(
                 children: [
                   const SizedBox(height: 100),
-                  FutureBuilder<Map<String, dynamic>>(
-                    future: controller.getUserDetails(),
-                    builder: (context, snap) {
-                      if (snap.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snap.hasError) {
-                        return Text('Error: ${snap.error}');
-                      } else {
-                        final userDetails = snap.data;
-                        final String role;
-                        if (userDetails!['is_admin'] == 1) {
-                          role = 'Admin';
+                  Expanded(
+                    flex: 2,
+                    child: FutureBuilder<Map<String, dynamic>>(
+                      future: controller.getUserDetails(),
+                      builder: (context, snap) {
+                        if (snap.connectionState == ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                            color: Styles.themeLight,
+                            backgroundColor: Styles.themeDark,
+                          ));
+                        } else if (snap.hasError) {
+                          return Text('Error: ${snap.error}');
                         } else {
-                          role = 'Pegawai';
-                        }
-                        return ListTile(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 30),
-                          title: Text(
-                            'Halo, ${userDetails['nama']}!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                                  color: Styles.themeLight,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          subtitle: Text(
-                            '${userDetails['jabatan']}\n${role.toUpperCase()}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  color: Colors.white70,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          trailing: ClipOval(
-                            child: SizedBox(
-                              width: 100,
-                              height: 100,
-                              child: Image.asset('assets/img/bg_logo.png'),
+                          final userDetails = snap.data;
+                          final fullName = userDetails!['nama'];
+                          final List<String> nameParts = fullName.split(' ');
+                          final firstName =
+                              nameParts.isNotEmpty ? nameParts[0] : '';
+                          return ListTile(
+                            isThreeLine: true,
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 30),
+                            title: Text(
+                              'Halo, $firstName!',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    color: Styles.themeLight,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                            subtitle: Text(
+                              '${userDetails['jabatan']}\n${userDetails['address']}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white70,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            trailing: ClipOval(
+                              child: SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Image.asset('assets/img/bg_logo.png'),
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  )
                 ],
               ),
             ),
