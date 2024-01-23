@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/styles/styles.dart';
+import 'package:hris/app/widgets/confirmation_dialog.dart';
 
 import '../controllers/profile_controller.dart';
 import '../../../controllers/page_index_controller.dart';
@@ -119,7 +120,20 @@ class ProfileView extends GetView<ProfileController> {
                   ListTile(
                     iconColor: Colors.redAccent,
                     textColor: Colors.redAccent,
-                    onTap: () => controller.logout(),
+                    onTap: () => {
+                      Get.dialog(
+                        ConfirmationDialog(
+                          title: "Konfirmasi",
+                          message:
+                              "Apakah anda yakin untuk keluar dari aplikasi?",
+                          confirmButtonText: "Keluar",
+                          onConfirm: () {
+                            controller.logout();
+                          },
+                          cancelButtonText: "Batal",
+                        ),
+                      )
+                    },
                     leading: const Icon(Icons.logout),
                     title: const Text("Keluar"),
                   ),
