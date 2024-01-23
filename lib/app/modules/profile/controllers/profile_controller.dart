@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
 import 'package:hris/app/routes/app_pages.dart';
@@ -43,7 +44,12 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         Get.snackbar("Berhasil", "Anda telah logout! Silahkan login kembali");
-        Get.toNamed(Routes.login);
+
+        // Use Future.microtask to ensure that this runs in the main isolate
+        Future.microtask(() {
+          Navigator.of(Get.context!).pushNamedAndRemoveUntil(
+              '/login', (Route<dynamic> route) => false);
+        });
       }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "gagal melakukan logout = $e");
