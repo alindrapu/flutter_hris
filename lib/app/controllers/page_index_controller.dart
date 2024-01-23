@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hris/app/styles/styles.dart';
+import 'package:hris/app/widgets/confirmation_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:local_auth/local_auth.dart';
@@ -129,18 +131,16 @@ class PageIndexController extends GetxController {
       final response =
           await http.post(Uri.parse(url), headers: headers, body: jsonBody);
       if (response.statusCode == 200) {
-        Get.defaultDialog(
+        Get.dialog(
+          ConfirmationDialog(
             title: "Berhasil",
-            middleText: "Absen telah berhasil",
-            actions: [
-              OutlinedButton(
-                onPressed: () async {
-                  Get.back();
-                  Get.back();
-                },
-                child: const Text("Kembali"),
-              ),
-            ]);
+            message: "Berhasil melakukan absensi",
+            confirmButtonText: "Kembali",
+            onConfirm: () {
+              Get.back();
+            },
+          ),
+        );
       }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "Gagal memperbarui posisi terakhir");
@@ -151,39 +151,32 @@ class PageIndexController extends GetxController {
     switch (i) {
       case 1:
         loadingDialog = Get.dialog(
-          const Center(child: CircularProgressIndicator()),
+          const Center(
+              child: CircularProgressIndicator(
+            color: Styles.themeLight,
+            backgroundColor: Styles.themeDark,
+          )),
           barrierDismissible: false,
         );
         Map<String, dynamic> response = await determinePosition();
         Get.back();
         if (response["error"] != true) {
           Position position = response["position"];
-          Get.defaultDialog(
-            title: "Konfirmasi Absen",
-            middleText: "Apakah Anda ingin melakukan Absen sekarang?",
-            titlePadding: const EdgeInsets.all(10),
-            contentPadding: const EdgeInsets.all(15),
-            actions: [
-              OutlinedButton(
-                onPressed: () async {
-                  Get.back();
-                  loadingDialog = Get.dialog(
-                    const Center(child: CircularProgressIndicator()),
-                    barrierDismissible: false,
-                  );
-                  await updatePosition(position);
-                },
-                child: const Text("Absen sekarang"),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  Get.back();
-                  Get.back();
-                },
-                child: const Text("Batal"),
-              ),
-            ],
-          );
+          Get.dialog(ConfirmationDialog(
+            title: "Konfirmasi",
+            message: "Lakukan absensi?",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Kembali",
+            onConfirm: () async {
+              loadingDialog = Get.dialog(
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                barrierDismissible: false,
+              );
+              await updatePosition(position);
+            },
+          ));
         } else {
           Get.snackbar("Terjadi Kesalahan", response["message"]);
         }
