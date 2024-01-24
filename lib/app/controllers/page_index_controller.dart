@@ -117,6 +117,9 @@ class PageIndexController extends GetxController {
         Get.back();
         if (response["error"] != true) {
           Position position = response["position"];
+          print(response['haversine']);
+          print("==========================");
+          print(response['distance']);
           Get.dialog(ConfirmationDialog(
             title: "Konfirmasi",
             message: "Lakukan absensi?",

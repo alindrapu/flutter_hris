@@ -17,7 +17,6 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
-    double w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
