@@ -7,4 +7,5 @@ class Styles {
   static const themeDark = const Color.fromRGBO(10, 76, 104, 1);
   static const themeLightDark = const Color.fromARGB(255, 45, 185, 167);
   static const themeTeal = const Color.fromARGB(255, 188, 210, 219);
+  static const themeCancel = Color.fromARGB(255, 173, 52, 15);
 }

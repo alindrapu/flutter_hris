@@ -1,8 +1,9 @@
 // ignore_for_file: avoid_print
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
-import 'package:hris/app/routes/app_pages.dart';
+import 'package:hris/app/styles/styles.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,8 +43,15 @@ class ProfileController extends GetxController {
           headers: {'Authorization': 'Bearer ${userDetails['token']}'});
 
       if (response.statusCode == 200) {
-        Get.snackbar("Berhasil", "Anda telah logout! Silahkan login kembali");
-        Get.toNamed(Routes.login);
+        Get.snackbar("Berhasil", "Anda berhasil keluar! Silahkan masuk kembali",
+            backgroundColor: Styles.themeTeal,
+            titleText: const AboutDialog(applicationName: "This"));
+
+        // Use Future.microtask to ensure that this runs in the main isolate
+        Future.microtask(() {
+          Navigator.of(Get.context!).pushNamedAndRemoveUntil(
+              '/login', (Route<dynamic> route) => false);
+        });
       }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "gagal melakukan logout = $e");
