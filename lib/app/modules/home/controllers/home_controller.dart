@@ -28,6 +28,8 @@ class HomeController extends GetxController {
     final String kecamatan = location['address'][0].locality;
     final String kota = location['address'][0].subAdministrativeArea;
     final String provinsi = location['address'][0].administrativeArea;
+    final jarak = location['haversine']['pembulatan'];
+    final jarakM = location['haversine']['jarakM'];
 
 
     return {
@@ -36,7 +38,9 @@ class HomeController extends GetxController {
       'agama': prefs.getString('nm_agama'),
       'is_admin': prefs.getInt('is_admin'),
       'token': prefs.getString('token'),
-      'address' : '$jalan, $kelurahan'
+      'address' : '$jalan, $kelurahan',
+      'jarak': jarak,
+      'jarakM': jarakM
     };
   }
 }

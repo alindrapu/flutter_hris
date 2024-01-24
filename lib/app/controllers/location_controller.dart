@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:vector_math/vector_math.dart';
@@ -57,8 +58,7 @@ mixin LocationController {
         latitude, longitude,
         localeIdentifier: "ID");
 
-    final distance =
-        await LocationController.distanceCalHaversine(position);
+    final distance = await LocationController.distanceCalHaversine(position);
     return {
       "position": position,
       'address': placemarks,
@@ -91,8 +91,9 @@ mixin LocationController {
     final dlat = lat2 - lat1;
     final dlong = long2 - long1;
     // final pangkatDlat = sin(dlat/2)
-    final a = pow(sin(dlat/2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlong / 2), 2);
-    final c = 2 * atan2(sqrt(a), sqrt(1-a));
+    final a =
+        pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlong / 2), 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     // Radius Bumi
     final R = 6371.0;
@@ -102,17 +103,16 @@ mixin LocationController {
     final pembulatanJarak = jarak.toStringAsFixed(2);
     final jarakM = double.parse(pembulatanJarak) * 1000;
 
-
     return {
       "lat1": "$lat1",
       "long1": "$long1",
       "lat2": "$lat2",
       "long2": "$long2",
-      "a" : "$a",
-      "c" : "$c",
-      "jarak" : "$jarak",
-      "pembulatan" : pembulatanJarak,
-      "jarakM" : "$jarakM"
+      "a": "$a",
+      "c": "$c",
+      "jarak": "$jarak",
+      "pembulatan": pembulatanJarak,
+      "jarakM": "$jarakM"
     };
   }
 }

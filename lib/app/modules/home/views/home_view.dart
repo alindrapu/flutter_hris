@@ -47,10 +47,14 @@ class HomeView extends GetView<HomeController> {
                         return Text('Error: ${snap.error}');
                       } else {
                         final userDetails = snap.data;
+                        final jarakLokasi = double.parse(userDetails!['jarakM']);
+                        final statusLokasi = jarakLokasi <= 200 ? 'Dalam jangkauan' : 'Di luar jangkauan';
+
                         final fullName = userDetails!['nama'];
                         final List<String> nameParts = fullName.split(' ');
                         final firstName =
                             nameParts.isNotEmpty ? nameParts[0] : '';
+
                         return ListTile(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 30),
@@ -65,7 +69,10 @@ class HomeView extends GetView<HomeController> {
                                 ),
                           ),
                           subtitle: Text(
-                            '${userDetails['jabatan']}\n${userDetails['address']}',
+                            '${userDetails['jabatan']}'
+                                '\n${userDetails['address']}'
+                                '\nJarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)'
+                                '\n$statusLokasi',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
