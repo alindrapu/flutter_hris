@@ -1,9 +1,7 @@
 
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/controllers/location_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:geocoding/geocoding.dart';
 
 class HomeController extends GetxController {
   RxBool isLoading = false.obs;
@@ -30,7 +28,6 @@ class HomeController extends GetxController {
     final String kecamatan = location['address'][0].locality;
     final String kota = location['address'][0].subAdministrativeArea;
     final String provinsi = location['address'][0].administrativeArea;
-    // final String province = location['address'][0].administrativeArea;
 
 
     return {

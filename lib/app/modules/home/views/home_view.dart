@@ -16,6 +16,8 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
@@ -23,7 +25,8 @@ class HomeView extends GetView<HomeController> {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height * 0.23,
+              padding: EdgeInsets.symmetric(vertical: h * 0.07),
+              constraints: BoxConstraints(minHeight: h * 0.2),
               decoration: const BoxDecoration(
                 color: Styles.themeDark,
                 borderRadius:
@@ -32,62 +35,55 @@ class HomeView extends GetView<HomeController> {
               alignment: Alignment.topLeft,
               child: Column(
                 children: [
-                  const SizedBox(height: 100),
-                  Expanded(
-                    flex: 2,
-                    child: FutureBuilder<Map<String, dynamic>>(
-                      future: controller.getUserDetails(),
-                      builder: (context, snap) {
-                        if (snap.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator(
-                            color: Styles.themeLight,
-                            backgroundColor: Styles.themeDark,
-                          ));
-                        } else if (snap.hasError) {
-                          return Text('Error: ${snap.error}');
-                        } else {
-                          final userDetails = snap.data;
-                          final fullName = userDetails!['nama'];
-                          final List<String> nameParts = fullName.split(' ');
-                          final firstName =
-                              nameParts.isNotEmpty ? nameParts[0] : '';
-                          return ListTile(
-                            isThreeLine: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 30),
-                            title: Text(
-                              'Halo, $firstName!',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
-                                    color: Styles.themeLight,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            subtitle: Text(
-                              '${userDetails['jabatan']}\n${userDetails['address']}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                    color: Colors.white70,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            trailing: ClipOval(
-                              child: SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: Image.asset('assets/img/bg_logo.png'),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
+                  FutureBuilder<Map<String, dynamic>>(
+                    future: controller.getUserDetails(),
+                    builder: (context, snap) {
+                      if (snap.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator(
+                          color: Styles.themeLight,
+                          backgroundColor: Styles.themeDark,
+                        ));
+                      } else if (snap.hasError) {
+                        return Text('Error: ${snap.error}');
+                      } else {
+                        final userDetails = snap.data;
+                        final fullName = userDetails!['nama'];
+                        final List<String> nameParts = fullName.split(' ');
+                        final firstName =
+                            nameParts.isNotEmpty ? nameParts[0] : '';
+                        return ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 30),
+                          title: Text(
+                            'Halo, $firstName!',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(
+                                  color: Styles.themeLight,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          subtitle: Text(
+                            '${userDetails['jabatan']}\n${userDetails['address']}',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  color: Colors.white70,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          trailing: Image.asset(
+                            'assets/img/bg_logo.png',
+                            isAntiAlias: true,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        );
+                      }
+                    },
                   )
                 ],
               ),
