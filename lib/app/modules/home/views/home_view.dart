@@ -1,6 +1,7 @@
 // ignore_for_file: use_super_parameters
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/routes/app_pages.dart';
@@ -9,8 +10,9 @@ import 'package:intl/intl.dart';
 import '../../../controllers/page_index_controller.dart';
 import '../controllers/home_controller.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatelessWidget {
   final pageC = Get.find<PageIndexController>();
+  final homeC = Get.find<HomeController>();
 
   HomeView({super.key});
 
@@ -25,17 +27,26 @@ class HomeView extends GetView<HomeController> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: h * 0.07),
-              constraints: BoxConstraints(minHeight: h * 0.2),
-              decoration: const BoxDecoration(
+              constraints: BoxConstraints(minHeight: h * 0.1),
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.4),
+                    spreadRadius: 8,
+                    blurRadius: 4,
+                    offset: const Offset(-2, 2),
+                  ),
+                ],
                 color: Styles.themeDark,
-                borderRadius:
-                    BorderRadius.only(bottomRight: Radius.circular(80)),
+                borderRadius: const BorderRadius.only(
+                  bottomRight: Radius.circular(80),
+                ),
               ),
               alignment: Alignment.topLeft,
               child: Column(
                 children: [
                   FutureBuilder<Map<String, dynamic>>(
-                    future: controller.getUserDetails(),
+                    future: homeC.getUserDetails(),
                     builder: (context, snap) {
                       if (snap.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -47,10 +58,13 @@ class HomeView extends GetView<HomeController> {
                         return Text('Error: ${snap.error}');
                       } else {
                         final userDetails = snap.data;
-                        final jarakLokasi = double.parse(userDetails!['jarakM']);
-                        final statusLokasi = jarakLokasi <= 200 ? 'Dalam jangkauan' : 'Di luar jangkauan';
+                        final jarakLokasi =
+                            double.parse(userDetails!['jarakM']);
+                        final statusLokasi = jarakLokasi <= 200
+                            ? 'Di dalam area'
+                            : 'Di luar area';
 
-                        final fullName = userDetails!['nama'];
+                        final fullName = userDetails['nama'];
                         final List<String> nameParts = fullName.split(' ');
                         final firstName =
                             nameParts.isNotEmpty ? nameParts[0] : '';
@@ -58,34 +72,49 @@ class HomeView extends GetView<HomeController> {
                         return ListTile(
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 30),
-                          title: Text(
-                            'Halo, $firstName!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineSmall
-                                ?.copyWith(
-                                  color: Styles.themeLight,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          subtitle: Text(
-                            '${userDetails['jabatan']}'
-                                '\n${userDetails['address']}'
-                                '\nJarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)'
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Halo, $firstName!',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(
+                                      color: Styles.themeLight,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              Text(
+                                '${userDetails['jabatan']}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color: Colors.white70,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                              Text(
+                                '${userDetails['address']}'
+                                'Jarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)'
                                 '\n$statusLokasi',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  color: Colors.white70,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color: Colors.white70,
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              ),
+                            ],
                           ),
                           trailing: Image.asset(
                             'assets/img/bg_logo.png',
                             isAntiAlias: true,
-                            fit: BoxFit.fitHeight,
+                            fit: BoxFit.fill,
                           ),
                         );
                       }
@@ -95,70 +124,109 @@ class HomeView extends GetView<HomeController> {
               ),
             ),
             const SizedBox(height: 20),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              padding: const EdgeInsets.all(25),
-              decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 4,
-                      offset: const Offset(1, 2),
-                    )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: CupertinoColors.systemGrey5,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                      ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Jam Masuk",
+                            style: TextStyle(
+                                color: Styles.themeDark,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "06 : 50",
+                                style: TextStyle(
+                                    color: Styles.themeDark,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 25),
+                              ),
+                              SizedBox(
+                                width: 50,
+                              ),
+                              Icon(
+                                Icons.timer_outlined,
+                                size: 40,
+                                color: Styles.themeDark,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                  borderRadius:
-                      const BorderRadius.only(topLeft: Radius.circular(80)),
-                  color: Styles.themeDark),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      const Text(
-                        'MASUK\n',
-                        style: TextStyle(
-                          color: Styles.themeLight,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                ),Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: CupertinoColors.systemGrey5,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
                         ),
                       ),
-                      Text(
-                        DateFormat.Hm().format(DateTime.now()),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Jam Keluar",
+                            style: TextStyle(
+                                color: Styles.themeCancel,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                          SizedBox(
+                            height: 25,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                "06 : 50",
+                                style: TextStyle(
+                                    color: Styles.themeCancel,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 25),
+                              ),
+                              SizedBox(
+                                width: 50,
+                              ),
+                              Icon(
+                                Icons.timer_off_outlined,
+                                size: 40,
+                                color: Styles.themeCancel,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  Container(
-                    width: 5,
-                    height: 50,
-                    color: Styles.themeLight,
-                  ),
-                  Column(
-                    children: [
-                      const Text(
-                        'KELUAR\n',
-                        style: TextStyle(
-                            color: Styles.themeLight,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                      Text(
-                        DateFormat.Hm().format(DateTime.now()),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             const Divider(

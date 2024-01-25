@@ -28,8 +28,8 @@ class HomeController extends GetxController {
     final String kecamatan = location['address'][0].locality;
     final String kota = location['address'][0].subAdministrativeArea;
     final String provinsi = location['address'][0].administrativeArea;
-    final jarak = location['haversine']['pembulatan'];
-    final jarakM = location['haversine']['jarakM'];
+    final jarak = location['distance']['pembulatan'];
+    final jarakM = location['distance']['jarakM'];
 
 
     return {

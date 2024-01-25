@@ -19,7 +19,6 @@ import 'package:local_auth_ios/local_auth_ios.dart';
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
-  var loadingDialog;
 
   Future<Map<String, dynamic>> getUserDetails() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -92,7 +91,7 @@ class PageIndexController extends GetxController {
             message: "Berhasil melakukan absensi",
             confirmButtonText: "Kembali",
             onConfirm: () {
-              Get.back();
+              Get.toNamed(Routes.home);
             },
           ),
         );
@@ -105,7 +104,7 @@ class PageIndexController extends GetxController {
   void changePage(int i) async {
     switch (i) {
       case 1:
-        loadingDialog = Get.dialog(
+        Get.dialog(
           const Center(
               child: CircularProgressIndicator(
             color: Styles.themeLight,
@@ -113,28 +112,51 @@ class PageIndexController extends GetxController {
           )),
           barrierDismissible: false,
         );
-        Map<String, dynamic> response = await LocationController.determinePosition();
+        // Cek dulu statusnya dalam area atau tidak dengan function haversine,
+        // Kalau dalam area pilihan absen adalah absen seperti biasa
+        // kalau di luar area berikan 2 jenis, WFH dan Perjalanan Dinas.
+        Map<String, dynamic> response =
+            await LocationController.determinePosition();
         Get.back();
         if (response["error"] != true) {
           Position position = response["position"];
-          print(response['haversine']);
-          print("==========================");
-          print(response['distance']);
-          Get.dialog(ConfirmationDialog(
-            title: "Konfirmasi",
-            message: "Lakukan absensi?",
-            confirmButtonText: "Ya",
-            cancelButtonText: "Kembali",
-            onConfirm: () async {
-              loadingDialog = Get.dialog(
-                const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                barrierDismissible: false,
-              );
-              await updatePosition(position);
-            },
-          ));
+          if (double.parse(response['distance']['jarakM']) >= 200) {
+            Get.dialog(
+              ConfirmationDialog(
+                title: "Absen di dalam area!",
+                message: "Lakukan absensi WFO?",
+                confirmButtonText: "Ya",
+                cancelButtonText: "Kembali",
+                onConfirm: () async {
+                  Get.dialog(
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    barrierDismissible: false,
+                  );
+                  await updatePosition(position);
+                },
+              ),
+            );
+          } else {
+            Get.dialog(
+              ConfirmationDialog(
+                title: "Absen di luar area!",
+                message: "Pilih jenis absensi",
+                confirmButtonText: "WFH",
+                cancelButtonText: "Perjalanan Dinas",
+                onConfirm: () async {
+                  Get.dialog(
+                    const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    barrierDismissible: false,
+                  );
+                  await updatePosition(position);
+                },
+              ),
+            );
+          }
         } else {
           Get.snackbar("Terjadi Kesalahan", response["message"]);
         }

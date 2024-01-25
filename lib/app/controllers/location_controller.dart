@@ -63,7 +63,7 @@ mixin LocationController {
       "position": position,
       'address': placemarks,
       "error": false,
-      "haversine": distance,
+      "distance": distance,
     };
   }
 
@@ -90,7 +90,6 @@ mixin LocationController {
     // Haversine Formula
     final dlat = lat2 - lat1;
     final dlong = long2 - long1;
-    // final pangkatDlat = sin(dlat/2)
     final a =
         pow(sin(dlat / 2), 2) + cos(lat1) * cos(lat2) * pow(sin(dlong / 2), 2);
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
