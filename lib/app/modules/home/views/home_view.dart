@@ -19,7 +19,7 @@ class AnimatedHero extends StatefulWidget {
 
 class _AnimatedHeroState extends State<AnimatedHero> {
   final homeC = Get.find<HomeController>();
-  double padValueTop = 0.0;
+  double padValueTop = 0.03;
   double padValueBot = 0.0;
 
   void _updatePadding(double top, double bot) async {
@@ -65,8 +65,8 @@ class _AnimatedHeroState extends State<AnimatedHero> {
           ),
           alignment: Alignment.topLeft,
           child: AnimatedPadding(
-            duration: const Duration(milliseconds: 1000),
-            curve: Curves.linearToEaseOut,
+            duration: const Duration(milliseconds: 1250),
+            curve: Curves.fastLinearToSlowEaseIn,
             padding: EdgeInsets.only(top: h * padValueTop, bottom: h * padValueBot),
             child: FutureBuilder<Map<String, dynamic>>(
               future: homeC.getUserDetails(),
