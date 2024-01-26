@@ -51,6 +51,9 @@ class ConfirmationDialog extends StatelessWidget {
                     Text(
                       message,
                       textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     // Buttons
@@ -71,7 +74,10 @@ class ConfirmationDialog extends StatelessWidget {
                                 Navigator.of(context).pop();
                                 await onConfirm();
                               },
-                              child: Text(confirmButtonText!),
+                              child: Text(
+                                confirmButtonText!,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         const SizedBox(width: 10),
@@ -89,7 +95,10 @@ class ConfirmationDialog extends StatelessWidget {
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text(cancelButtonText!),
+                              child: Text(
+                                cancelButtonText!,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                       ],
