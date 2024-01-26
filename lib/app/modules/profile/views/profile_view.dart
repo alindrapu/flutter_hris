@@ -131,6 +131,7 @@ class ProfileView extends GetView<ProfileController> {
                             controller.logout();
                           },
                           cancelButtonText: "Batal",
+                          onCancel: (){},
                         ),
                       )
                     },

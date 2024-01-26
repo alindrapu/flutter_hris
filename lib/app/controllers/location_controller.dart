@@ -1,10 +1,7 @@
-import 'dart:ffi';
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:vector_math/vector_math.dart';
 
 mixin LocationController {
   static Future<Map<String, dynamic>> determinePosition() async {
@@ -95,7 +92,7 @@ mixin LocationController {
     final c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     // Radius Bumi
-    final R = 6371.0;
+    const R = 6371.0;
 
     // Hitung jarak
     final jarak = R * c;

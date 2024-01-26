@@ -11,5 +11,6 @@ class Api {
   static const newKdPass = "$_baseUrl/new-kd-password";
   static const addPegawaiCurrent = "$_baseUrl/add-pegawai-current";
   static const updateCurrentPosition = "$_baseUrl/update-current-position";
+  static const absenPegawai = "$_baseUrl/presensi-pegawai";
 }
 
