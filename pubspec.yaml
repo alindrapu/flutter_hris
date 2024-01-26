@@ -23,7 +23,7 @@ dependencies:
   geocoding: ^2.1.1
   vector_math: ^2.1.4
   local_auth: ^2.1.8
-  flutter_analog_clock: ^1.0.3
+  flutter_svg: ^2.0.9
   flutter: 
     sdk: flutter
   local_auth_android: ^1.0.36
@@ -38,6 +38,7 @@ flutter:
   assets: 
     - assets/
     - assets/img/
+    - assets/img/bg_logo.svg
   fonts: 
     - family: Poppins
       fonts: 

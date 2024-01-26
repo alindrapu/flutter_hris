@@ -10,6 +10,176 @@ import 'package:intl/intl.dart';
 import '../../../controllers/page_index_controller.dart';
 import '../controllers/home_controller.dart';
 
+class AnimatedHero extends StatefulWidget {
+  const AnimatedHero({super.key});
+
+  @override
+  State<AnimatedHero> createState() => _AnimatedHeroState();
+}
+
+class _AnimatedHeroState extends State<AnimatedHero> {
+  final homeC = Get.find<HomeController>();
+  double padValueTop = 0.0;
+  double padValueBot = 0.0;
+
+  void _updatePadding(double top, double bot) async {
+    setState(() {
+      padValueTop = top;
+      padValueBot = bot;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.wait([homeC.getUserDetails()])
+        .then((_) => _updatePadding(0.07, 0.02));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final homeC = Get.find<HomeController>();
+    double h = MediaQuery.of(context).size.height;
+
+    String statusLokasi;
+    Color statusColor;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          constraints: BoxConstraints(minHeight: h * 0.1),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.4),
+                spreadRadius: 8,
+                blurRadius: 4,
+                offset: const Offset(-2, 2),
+              ),
+            ],
+            color: Styles.themeDark,
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(80),
+            ),
+          ),
+          alignment: Alignment.topLeft,
+          child: AnimatedPadding(
+            duration: const Duration(milliseconds: 1000),
+            curve: Curves.linearToEaseOut,
+            padding: EdgeInsets.only(top: h * padValueTop, bottom: h * padValueBot),
+            child: FutureBuilder<Map<String, dynamic>>(
+              future: homeC.getUserDetails(),
+              builder: (context, snap) {
+                if (snap.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Styles.themeLight,
+                      backgroundColor: Styles.themeDark,
+                    ),
+                  );
+                } else if (snap.hasError) {
+                  return Text('Error: ${snap.error}');
+                } else {
+
+                  final userDetails = snap.data;
+                  final jarakLokasi = double.parse(userDetails!['jarakM']);
+
+                  if (jarakLokasi <= 200) {
+                    statusLokasi = 'Di dalam area';
+                    statusColor = Styles.themeLight;
+                  } else {
+                    statusLokasi = 'Di luar area';
+                    statusColor = Colors.amberAccent;
+                  }
+                  final fullName = userDetails['nama'];
+                  final List<String> nameParts = fullName.split(' ');
+                  final firstName = nameParts.isNotEmpty ? nameParts[0] : '';
+
+                  return ListTile(
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Halo, $firstName!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                color: Styles.themeLight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        Text(
+                          '${userDetails['jabatan']}',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const Divider(
+                          thickness: 2,
+                          color: Styles.themeLight,
+                          indent: 2,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${userDetails['address']}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: Colors.white70,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            Text(
+                              'Jarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleSmall
+                                  ?.copyWith(
+                                    color: Colors.white70,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
+                            Text(
+                              statusLokasi,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    color: statusColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    trailing: Image.asset(
+                      'assets/img/bg_logo.png',
+                      isAntiAlias: true,
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class HomeView extends StatelessWidget {
   final pageC = Get.find<PageIndexController>();
   final homeC = Get.find<HomeController>();
@@ -18,111 +188,15 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double h = MediaQuery.of(context).size.height;
+    double w = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
             decelerationRate: ScrollDecelerationRate.normal),
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.symmetric(vertical: h * 0.07),
-              constraints: BoxConstraints(minHeight: h * 0.1),
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    spreadRadius: 8,
-                    blurRadius: 4,
-                    offset: const Offset(-2, 2),
-                  ),
-                ],
-                color: Styles.themeDark,
-                borderRadius: const BorderRadius.only(
-                  bottomRight: Radius.circular(80),
-                ),
-              ),
-              alignment: Alignment.topLeft,
-              child: Column(
-                children: [
-                  FutureBuilder<Map<String, dynamic>>(
-                    future: homeC.getUserDetails(),
-                    builder: (context, snap) {
-                      if (snap.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                            child: CircularProgressIndicator(
-                          color: Styles.themeLight,
-                          backgroundColor: Styles.themeDark,
-                        ));
-                      } else if (snap.hasError) {
-                        return Text('Error: ${snap.error}');
-                      } else {
-                        final userDetails = snap.data;
-                        final jarakLokasi =
-                            double.parse(userDetails!['jarakM']);
-                        final statusLokasi = jarakLokasi <= 200
-                            ? 'Di dalam area'
-                            : 'Di luar area';
-
-                        final fullName = userDetails['nama'];
-                        final List<String> nameParts = fullName.split(' ');
-                        final firstName =
-                            nameParts.isNotEmpty ? nameParts[0] : '';
-
-                        return ListTile(
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 30),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Halo, $firstName!',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(
-                                      color: Styles.themeLight,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              Text(
-                                '${userDetails['jabatan']}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: Colors.white70,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                              Text(
-                                '${userDetails['address']}'
-                                'Jarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)'
-                                '\n$statusLokasi',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color: Colors.white70,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          trailing: Image.asset(
-                            'assets/img/bg_logo.png',
-                            isAntiAlias: true,
-                            fit: BoxFit.fill,
-                          ),
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
+            const AnimatedHero(),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,24 +212,24 @@ class HomeView extends StatelessWidget {
                           Radius.circular(15),
                         ),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "Jam Masuk",
                             style: TextStyle(
                                 color: Styles.themeDark,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
+                              const Text(
                                 "06 : 50",
                                 style: TextStyle(
                                     color: Styles.themeDark,
@@ -163,9 +237,9 @@ class HomeView extends StatelessWidget {
                                     fontSize: 25),
                               ),
                               SizedBox(
-                                width: 50,
+                                width: w * 0.05,
                               ),
-                              Icon(
+                              const Icon(
                                 Icons.timer_outlined,
                                 size: 40,
                                 color: Styles.themeDark,
@@ -176,7 +250,8 @@ class HomeView extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),Column(
+                ),
+                Column(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(20),
@@ -187,37 +262,37 @@ class HomeView extends StatelessWidget {
                           Radius.circular(15),
                         ),
                       ),
-                      child: const Column(
+                      child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
+                          const Text(
                             "Jam Keluar",
                             style: TextStyle(
-                                color: Styles.themeCancel,
+                                color: Styles.themeDark,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 25,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                "06 : 50",
-                                style: TextStyle(
-                                    color: Styles.themeCancel,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 25),
-                              ),
-                              SizedBox(
-                                width: 50,
-                              ),
-                              Icon(
+                              const Icon(
                                 Icons.timer_off_outlined,
                                 size: 40,
-                                color: Styles.themeCancel,
+                                color: Styles.themeDark,
+                              ),
+                              SizedBox(
+                                width: w * 0.05,
+                              ),
+                              const Text(
+                                "06 : 50",
+                                style: TextStyle(
+                                    color: Styles.themeDark,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 25),
                               ),
                             ],
                           ),

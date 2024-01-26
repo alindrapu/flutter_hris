@@ -120,7 +120,7 @@ class PageIndexController extends GetxController {
         Get.back();
         if (response["error"] != true) {
           Position position = response["position"];
-          if (double.parse(response['distance']['jarakM']) >= 200) {
+          if (double.parse(response['distance']['jarakM']) <= 200) {
             Get.dialog(
               ConfirmationDialog(
                 title: "Absen di dalam area!",
