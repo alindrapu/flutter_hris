@@ -2,8 +2,10 @@
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hris/app/controllers/absen_controller.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:intl/intl.dart';
@@ -67,7 +69,8 @@ class _AnimatedHeroState extends State<AnimatedHero> {
           child: AnimatedPadding(
             duration: const Duration(milliseconds: 1250),
             curve: Curves.fastLinearToSlowEaseIn,
-            padding: EdgeInsets.only(top: h * padValueTop, bottom: h * padValueBot),
+            padding:
+                EdgeInsets.only(top: h * padValueTop, bottom: h * padValueBot),
             child: FutureBuilder<Map<String, dynamic>>(
               future: homeC.getUserDetails(),
               builder: (context, snap) {
@@ -81,7 +84,6 @@ class _AnimatedHeroState extends State<AnimatedHero> {
                 } else if (snap.hasError) {
                   return Text('Error: ${snap.error}');
                 } else {
-
                   final userDetails = snap.data;
                   final jarakLokasi = double.parse(userDetails!['jarakM']);
 
@@ -193,116 +195,185 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(
-            decelerationRate: ScrollDecelerationRate.normal),
+          decelerationRate: ScrollDecelerationRate.normal,
+        ),
         child: Column(
           children: [
             const AnimatedHero(),
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: CupertinoColors.systemGrey5,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
+            FutureBuilder<Map<String, dynamic>?>(
+                future: absenController.checkAbsen(),
+                builder: (context, snapToday) {
+                  if (snapToday.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Styles.themeLight,
+                        backgroundColor: Colors.transparent,
+                      ),
+                    );
+                  } else if (snapToday.hasError) {
+                    return Text('Error: ${snapToday.error}');
+                  } else {
+                    final data = snapToday.data;
+                    final jamMasuk = data?['jamMasuk'] == null
+                        ? "--:--:--"
+                        : data!['jamMasuk'];
+                    final jamKeluar = data?['jamKeluar'] == null
+                        ? "--:--:--"
+                        : data!['jamKeluar'];
+
+                    String timeFromData = jamMasuk;
+                    late bool isLate = false;
+
+                    List<String> timeParts = timeFromData.split(':');
+                    int jam = int.parse(timeParts[0]);
+                    int menit = int.parse(timeParts[1]);
+
+                    // Waktu terlambat
+                    int targetJam = 8;
+                    int targetMenit = 15;
+
+                    // Cek apakah terlambat
+                    if (jam > targetJam ||
+                        (jam == targetJam && menit > targetMenit)) {
+                      isLate = true;
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(w * 0.05),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: CupertinoColors.systemGrey5,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "JAM MASUK",
+                                    style: TextStyle(
+                                        color: isLate == true
+                                            ? Styles.themeCancel
+                                            : Styles.themeDark,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  if (isLate == true)
+                                    const Text(
+                                      "Terlambat!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Styles.themeCancel),
+                                    ),
+                                  if (jamMasuk == "--:--:--")
+                                    const Text(
+                                      "Belum Absen!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Styles.themeDark),
+                                    ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "$jamMasuk",
+                                        style: TextStyle(
+                                            color: isLate == true
+                                                ? Styles.themeCancel
+                                                : Styles.themeDark,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 25),
+                                      ),
+                                      SizedBox(
+                                        width: w * 0.05,
+                                      ),
+                                      Icon(
+                                        Icons.timer_outlined,
+                                        size: 40,
+                                        color: isLate == true
+                                            ? Styles.themeCancel
+                                            : Styles.themeDark,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Jam Masuk",
-                            style: TextStyle(
-                                color: Styles.themeDark,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Text(
-                                "06 : 50",
-                                style: TextStyle(
-                                    color: Styles.themeDark,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 25),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(w * 0.05),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: CupertinoColors.systemGrey5,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
                               ),
-                              SizedBox(
-                                width: w * 0.05,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    "JAM KELUAR",
+                                    style: TextStyle(
+                                      color: Styles.themeDark,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  if (jamKeluar == "--:--:--")
+                                    const Text(
+                                      "Belum Absen!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Styles.themeDark),
+                                    ),
+                                  const SizedBox(
+                                    height: 25,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      const Icon(
+                                        Icons.timer_off_outlined,
+                                        size: 40,
+                                        color: Styles.themeDark,
+                                      ),
+                                      SizedBox(
+                                        width: w * 0.05,
+                                      ),
+                                      Text(
+                                        "$jamKeluar",
+                                        style: const TextStyle(
+                                            color: Styles.themeDark,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 25),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                              const Icon(
-                                Icons.timer_outlined,
-                                size: 40,
-                                color: Styles.themeDark,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: CupertinoColors.systemGrey5,
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
+                            ),
+                          ],
                         ),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Text(
-                            "Jam Keluar",
-                            style: TextStyle(
-                                color: Styles.themeDark,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                          const SizedBox(
-                            height: 25,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const Icon(
-                                Icons.timer_off_outlined,
-                                size: 40,
-                                color: Styles.themeDark,
-                              ),
-                              SizedBox(
-                                width: w * 0.05,
-                              ),
-                              const Text(
-                                "06 : 50",
-                                style: TextStyle(
-                                    color: Styles.themeDark,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 25),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                      ],
+                    );
+                  }
+                }),
             const SizedBox(height: 20),
             const Divider(
               thickness: 2,

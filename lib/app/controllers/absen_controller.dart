@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
@@ -12,8 +14,9 @@ import 'package:local_auth_ios/local_auth_ios.dart';
 import 'package:http/http.dart' as http;
 
 mixin absenController {
+  // Future untuk absen masuk dan keluar pegawai
   static Future<void> absenPegawai(Position position, int kdAbsen,
-      String statusLokasi, bool statusAbsen) async {
+      String statusLokasi) async {
     Map<String, dynamic> userData =
         await userDetailsController.getUserDetails();
     final userDetails = userData;
@@ -119,6 +122,45 @@ mixin absenController {
       }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "Gagal memperbarui posisi terakhir");
+    }
+  }
+
+  // Stream untuk cek absen pegawai saat ini untuk update widget
+  static Future<Map<String, dynamic>?> checkAbsen() async {
+    Map<String, dynamic> userData =
+        await userDetailsController.getUserDetails();
+    final userDetails = userData;
+
+    // Headers
+    final Map<String, String> headers = {
+      "Accept": "application/json",
+      "Authorization": "Bearer ${userDetails["token"]}",
+      "Content-Type": "application/json",
+    };
+
+    // Body update current position
+    final Map<String, dynamic> body = {
+      "kd_akses": userDetails['kd_akses'],
+    };
+
+    // API Request
+    String jsonBody = jsonEncode(body);
+    String url = Api.checkAbsen;
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: jsonBody);
+    try {
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final jamMasuk = responseData['message'][0]['jam_masuk'];
+        final jamKeluar = responseData['message'][0]['jam_keluar'];
+
+        return {
+          'jamMasuk': jamMasuk,
+          'jamKeluar': jamKeluar,
+        };
+      }
+    } catch (e) {
+     return null;
     }
   }
 }

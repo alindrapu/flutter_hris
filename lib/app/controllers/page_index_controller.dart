@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, avoid_print
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/controllers/absen_controller.dart';
@@ -12,7 +12,6 @@ class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
   late int kdAbsen;
   late String statusLokasi;
-  late bool statusAbsen;
 
   void changePage(int i) async {
     switch (i) {
@@ -32,20 +31,22 @@ class PageIndexController extends GetxController {
         Map<String, dynamic> response =
             await LocationController.determinePosition();
         Get.back();
+        final cekAbsenMasuk = await absenController.checkAbsen();
+        print(cekAbsenMasuk?['jamMasuk']);
+
         if (response["error"] != true) {
           Position position = response["position"];
           // Absen dalam area
-          if (double.parse(response['distance']['jarakM']) >= 200) {
+          if (double.parse(response['distance']['jarakM']) <= 200) {
             print(position);
             statusLokasi = "Di dalam area";
-            statusAbsen = false;
-            if (statusAbsen == false) {
+
+            if (cekAbsenMasuk?['jamMasuk'] == null) {
               // Absen Masuk
-              print("status absen : $statusAbsen");
               Get.dialog(
                 ConfirmationDialog(
-                  title: "Absen di dalam area!",
-                  message: "Lakukan absensi WFO?",
+                  title: "ABSEN MASUK",
+                  message: "Anda berada di dalam area, lakukan absensi WFO?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
                   onConfirm: () async {
@@ -57,20 +58,21 @@ class PageIndexController extends GetxController {
                       barrierDismissible: false,
                     );
                     await absenController.absenPegawai(
-                        position, kdAbsen, statusLokasi, statusAbsen);
+                        position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {
+                    Get.back();
                     Get.back();
                   },
                 ),
               );
-            } else {
+            } else if (cekAbsenMasuk?['jamMasuk'] != null &&
+                cekAbsenMasuk?['jamKeluar'] == null) {
               //   Absen Keluar
-              statusAbsen = true;
               Get.dialog(
                 ConfirmationDialog(
-                  title: "Absen di dalam area!",
-                  message: "Lakukan absen keluar?",
+                  title: "ABSEN KELUAR",
+                  message: "Anda berada di dalam area, lakukan absen keluar?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
                   onConfirm: () async {
@@ -82,45 +84,75 @@ class PageIndexController extends GetxController {
                       barrierDismissible: false,
                     );
                     await absenController.absenPegawai(
-                        position, kdAbsen, statusLokasi, statusAbsen);
+                        position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {},
                 ),
               );
+            } else {
+              Get.snackbar("Terjadi Kesalahan",
+                  "Absen masuk dan absen keluar Anda hari ini sudah tercatat! Tidak bisa melakukan absen lagi");
             }
-          } else {
+          } else if (double.parse(response['distance']['jarakM']) >= 200) {
             // Absen luar area
             statusLokasi = "Di luar area";
-            Get.dialog(
-              ConfirmationDialog(
-                title: "Absen di luar area!",
-                message: "Pilih jenis absensi",
-                confirmButtonText: "WFH",
-                cancelButtonText: "Perjalanan Dinas",
-                onConfirm: () async {
-                  kdAbsen = 2;
-                  Get.dialog(
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    barrierDismissible: false,
-                  );
-                  await absenController.absenPegawai(
-                      position, kdAbsen, statusLokasi, statusAbsen);
-                },
-                onCancel: () async {
-                  kdAbsen = 3;
-                  Get.dialog(
-                    const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    barrierDismissible: false,
-                  );
-                  await absenController.absenPegawai(
-                      position, kdAbsen, statusLokasi, statusAbsen);
-                },
-              ),
-            );
+            if (cekAbsenMasuk?['jamMasuk'] == null) {
+              Get.dialog(
+                ConfirmationDialog(
+                  title: "ABSEN MASUK",
+                  message: "Anda berada di luar area, pilih jenis absensi",
+                  confirmButtonText: "WFH",
+                  cancelButtonText: "Perjalanan Dinas",
+                  onConfirm: () async {
+                    kdAbsen = 2;
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
+                    await absenController.absenPegawai(
+                        position, kdAbsen, statusLokasi);
+                  },
+                  onCancel: () async {
+                    kdAbsen = 3;
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
+                    await absenController.absenPegawai(
+                        position, kdAbsen, statusLokasi);
+                  },
+                ),
+              );
+            } else if (cekAbsenMasuk?['jamMasuk'] != null &&
+                cekAbsenMasuk?['jamKeluar'] == null) {
+              Get.dialog(
+                ConfirmationDialog(
+                  title: "ABSEN KELUAR",
+                  message: "Anda berada di luar area, lakukan absen keluar?",
+                  confirmButtonText: "Ya",
+                  cancelButtonText: "Kembali",
+                  onConfirm: () async {
+                    int kdAbsen = 1;
+                    Get.dialog(
+                      const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      barrierDismissible: false,
+                    );
+                    await absenController.absenPegawai(
+                        position, kdAbsen, statusLokasi);
+                  },
+                  onCancel: () {},
+                ),
+              );
+            } else {
+              Get.snackbar("Terjadi Kesalahan",
+                  "Absen masuk dan absen keluar Anda hari ini sudah tercatat! Tidak bisa melakukan absen lagi");
+            }
           }
         } else {
           Get.snackbar("Terjadi Kesalahan", response["message"]);

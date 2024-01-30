@@ -12,5 +12,6 @@ class Api {
   static const addPegawaiCurrent = "$_baseUrl/add-pegawai-current";
   static const updateCurrentPosition = "$_baseUrl/update-current-position";
   static const absenPegawai = "$_baseUrl/presensi-pegawai";
+  static const checkAbsen = "$_baseUrl/check-presensi";
 }
 
