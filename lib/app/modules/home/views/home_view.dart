@@ -2,7 +2,6 @@
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/controllers/absen_controller.dart';
@@ -225,18 +224,20 @@ class HomeView extends StatelessWidget {
                     String timeFromData = jamMasuk;
                     late bool isLate = false;
 
-                    List<String> timeParts = timeFromData.split(':');
-                    int jam = int.parse(timeParts[0]);
-                    int menit = int.parse(timeParts[1]);
+                    if (jamMasuk != "--:--:--") {
+                      List<String> timeParts = timeFromData.split(':');
+                      int jam = int.parse(timeParts[0]);
+                      int menit = int.parse(timeParts[1]);
 
-                    // Waktu terlambat
-                    int targetJam = 8;
-                    int targetMenit = 15;
+                      // Waktu terlambat
+                      int targetJam = 8;
+                      int targetMenit = 15;
 
-                    // Cek apakah terlambat
-                    if (jam > targetJam ||
-                        (jam == targetJam && menit > targetMenit)) {
-                      isLate = true;
+                      // Cek apakah terlambat
+                      if (jam > targetJam ||
+                          (jam == targetJam && menit > targetMenit)) {
+                        isLate = true;
+                      }
                     }
 
                     return Row(
@@ -257,12 +258,10 @@ class HomeView extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "JAM MASUK",
                                     style: TextStyle(
-                                        color: isLate == true
-                                            ? Styles.themeCancel
-                                            : Styles.themeDark,
+                                        color: Styles.themeDark,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20),
                                   ),
@@ -288,22 +287,18 @@ class HomeView extends StatelessWidget {
                                     children: [
                                       Text(
                                         "$jamMasuk",
-                                        style: TextStyle(
-                                            color: isLate == true
-                                                ? Styles.themeCancel
-                                                : Styles.themeDark,
+                                        style: const TextStyle(
+                                            color: Styles.themeDark,
                                             fontWeight: FontWeight.w500,
                                             fontSize: 25),
                                       ),
                                       SizedBox(
                                         width: w * 0.05,
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.timer_outlined,
                                         size: 40,
-                                        color: isLate == true
-                                            ? Styles.themeCancel
-                                            : Styles.themeDark,
+                                        color: Styles.themeDark,
                                       ),
                                     ],
                                   ),
@@ -338,6 +333,13 @@ class HomeView extends StatelessWidget {
                                   if (jamKeluar == "--:--:--")
                                     const Text(
                                       "Belum Absen!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Styles.themeDark),
+                                    ),
+                                  if (jamKeluar != "--:--:--")
+                                    const Text(
+                                      "Sudah Absen!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
