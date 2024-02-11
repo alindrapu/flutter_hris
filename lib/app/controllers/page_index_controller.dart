@@ -31,7 +31,7 @@ class PageIndexController extends GetxController {
         Map<String, dynamic> response =
             await LocationController.determinePosition();
         Get.back();
-        final cekAbsenMasuk = await absenController.checkAbsen();
+        final cekAbsenMasuk = await AbsenController.checkAbsen();
         print(cekAbsenMasuk?['jamMasuk']);
 
         if (response["error"] != true) {
@@ -57,7 +57,7 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await absenController.absenPegawai(
+                    await AbsenController().absenPegawai(
                         position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {
@@ -83,7 +83,7 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await absenController.absenPegawai(
+                    await AbsenController().absenPegawai(
                         position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {},
@@ -93,7 +93,7 @@ class PageIndexController extends GetxController {
               Get.snackbar("Terjadi Kesalahan",
                   "Absen masuk dan absen keluar Anda hari ini sudah tercatat! Tidak bisa melakukan absen lagi");
             }
-          } else if (double.parse(response['distance']['jarakM']) >= 200) {
+          } else if (double.parse(response['distance']['jarakM']) > 200) {
             // Absen luar area
             statusLokasi = "Di luar area";
             if (cekAbsenMasuk?['jamMasuk'] == null) {
@@ -111,7 +111,7 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await absenController.absenPegawai(
+                    await AbsenController().absenPegawai(
                         position, kdAbsen, statusLokasi);
                   },
                   onCancel: () async {
@@ -122,7 +122,7 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await absenController.absenPegawai(
+                    await AbsenController().absenPegawai(
                         position, kdAbsen, statusLokasi);
                   },
                 ),
@@ -143,7 +143,7 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await absenController.absenPegawai(
+                    await AbsenController().absenPegawai(
                         position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {},

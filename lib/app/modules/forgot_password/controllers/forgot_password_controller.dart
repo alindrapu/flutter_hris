@@ -7,13 +7,10 @@ class ForgotPasswordController extends GetxController {
   RxBool isLoading = false.obs;
   TextEditingController emailC = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
   Future<void> forgotPassword() async {
     try {
       if (emailC.text.isNotEmpty) {
         isLoading.value = true;
-        await auth.sendPasswordResetEmail(email: emailC.text);
         Get.defaultDialog(
           title: "Email terkirim!",
           middleText:
@@ -29,13 +26,7 @@ class ForgotPasswordController extends GetxController {
           ],
         );
       } else if (emailC.text.isEmpty) {
-        Get.snackbar("Terjadi Kesalahan", "Email harus diisi");
-      }
-    } on FirebaseAuthException catch (e) {
-      isLoading.value = false;
-      if (e.code.isNotEmpty) {
-        Get.snackbar("Terjadi Kesalahan",
-            "Gagal mengirim email reset password, email tidak terdaftar");
+        Get.snackbar("Terjadi Kesscralahan", "Email harus diisi");
       }
     } catch (e) {
       isLoading.value = false;

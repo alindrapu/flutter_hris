@@ -43,9 +43,11 @@ class ProfileController extends GetxController {
           headers: {'Authorization': 'Bearer ${userDetails['token']}'});
 
       if (response.statusCode == 200) {
-        Get.snackbar("Berhasil", "Anda berhasil keluar! Silahkan masuk kembali",
-            backgroundColor: Styles.themeTeal,
-            titleText: const AboutDialog(applicationName: "This"));
+        Get.snackbar(
+          "Berhasil",
+          "Anda berhasil keluar! Silahkan masuk kembali",
+          backgroundColor: Styles.themeTeal,
+        );
 
         // Use Future.microtask to ensure that this runs in the main isolate
         Future.microtask(() {

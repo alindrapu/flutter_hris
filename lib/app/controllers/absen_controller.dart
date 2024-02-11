@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
@@ -13,9 +14,10 @@ import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_ios/local_auth_ios.dart';
 import 'package:http/http.dart' as http;
 
-mixin absenController {
+class AbsenController extends GetxController{
+  TextEditingController alasanC = TextEditingController();
   // Future untuk absen masuk dan keluar pegawai
-  static Future<void> absenPegawai(Position position, int kdAbsen,
+  Future<void> absenPegawai(Position position, int kdAbsen,
       String statusLokasi) async {
     Map<String, dynamic> userData =
         await userDetailsController.getUserDetails();
@@ -79,6 +81,7 @@ mixin absenController {
             "longitude": "${position.longitude}",
             "status_lokasi_masuk": statusLokasi,
             "kd_jenis_absensi": kdAbsen,
+            "alasan": alasanC.toString()
           };
 
           // Api Request Absen Pegawai
@@ -162,5 +165,6 @@ mixin absenController {
     } catch (e) {
      return null;
     }
+    return null;
   }
 }

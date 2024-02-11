@@ -141,7 +141,7 @@ class _AnimatedHeroState extends State<AnimatedHero> {
                                   ),
                             ),
                             Text(
-                              'Jarak dari kantor : ${userDetails['jarakM']}M (${userDetails['jarak']} KM)',
+                              'Jarak dari kantor : ${jarakLokasi.toStringAsFixed(0)} M (${userDetails['jarak']} KM)',
                               style: Theme.of(context)
                                   .textTheme
                                   .titleSmall
@@ -201,7 +201,7 @@ class HomeView extends StatelessWidget {
             const AnimatedHero(),
             const SizedBox(height: 20),
             FutureBuilder<Map<String, dynamic>?>(
-                future: absenController.checkAbsen(),
+                future: AbsenController.checkAbsen(),
                 builder: (context, snapToday) {
                   if (snapToday.connectionState == ConnectionState.waiting) {
                     return const Center(
@@ -275,6 +275,13 @@ class HomeView extends StatelessWidget {
                                   if (jamMasuk == "--:--:--")
                                     const Text(
                                       "Belum Absen!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Styles.themeDark),
+                                    ),
+                                  if (jamMasuk != "--:--:--" && isLate == false)
+                                    const Text(
+                                      "Sudah Absen!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
