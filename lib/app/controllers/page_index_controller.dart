@@ -7,11 +7,14 @@ import 'package:hris/app/routes/app_pages.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:hris/app/widgets/confirmation_dialog.dart';
+import 'package:hris/app/widgets/text_dialog.dart';
 
 class PageIndexController extends GetxController {
   RxInt pageIndex = 0.obs;
   late int kdAbsen;
   late String statusLokasi;
+
+  get absenController => null;
 
   void changePage(int i) async {
     switch (i) {
@@ -57,8 +60,8 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await AbsenController().absenPegawai(
-                        position, kdAbsen, statusLokasi);
+                    await AbsenController()
+                        .absenPegawai(position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {
                     Get.back();
@@ -83,8 +86,8 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await AbsenController().absenPegawai(
-                        position, kdAbsen, statusLokasi);
+                    await AbsenController()
+                        .absenPegawai(position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {},
                 ),
@@ -106,13 +109,19 @@ class PageIndexController extends GetxController {
                   onConfirm: () async {
                     kdAbsen = 2;
                     Get.dialog(
-                      const Center(
-                        child: CircularProgressIndicator(),
+                      TextDialog(
+                        title: "Alasan",
+                        message: "Masukkan alasan WFH/Perjalanan Dinas",
+                        confirmButtonText: "Absen",
+                        cancelButtonText: "Batal",
+                        onConfirm: (text) async {
+                          await AbsenController()
+                              .absenPegawai(position, kdAbsen, statusLokasi, text);
+                        },
+                        onCancel: () {},
+                        controller: AbsenController().alasanC,
                       ),
-                      barrierDismissible: false,
                     );
-                    await AbsenController().absenPegawai(
-                        position, kdAbsen, statusLokasi);
                   },
                   onCancel: () async {
                     kdAbsen = 3;
@@ -122,8 +131,8 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await AbsenController().absenPegawai(
-                        position, kdAbsen, statusLokasi);
+                    await AbsenController()
+                        .absenPegawai(position, kdAbsen, statusLokasi);
                   },
                 ),
               );
@@ -143,8 +152,8 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await AbsenController().absenPegawai(
-                        position, kdAbsen, statusLokasi);
+                    await AbsenController()
+                        .absenPegawai(position, kdAbsen, statusLokasi);
                   },
                   onCancel: () {},
                 ),

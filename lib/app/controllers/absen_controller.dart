@@ -9,16 +9,20 @@ import 'package:hris/app/config/api.dart';
 import 'package:hris/app/controllers/user_details_controller.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/widgets/confirmation_dialog.dart';
+import 'package:hris/app/widgets/text_dialog.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_ios/local_auth_ios.dart';
 import 'package:http/http.dart' as http;
 
-class AbsenController extends GetxController{
+class AbsenController extends GetxController {
   TextEditingController alasanC = TextEditingController();
+
+  get absenController => null;
+
   // Future untuk absen masuk dan keluar pegawai
-  Future<void> absenPegawai(Position position, int kdAbsen,
-      String statusLokasi) async {
+  Future<void> absenPegawai(
+      Position position, int kdAbsen, String statusLokasi, [String? alasanC]) async {
     Map<String, dynamic> userData =
         await userDetailsController.getUserDetails();
     final userDetails = userData;
@@ -74,6 +78,8 @@ class AbsenController extends GetxController{
       print(responsePosition.statusCode);
       if (responsePosition.statusCode == 200) {
         try {
+          print(alasanC!);
+
           // Body absen pegawai
           final Map<String, dynamic> absenBody = {
             "kd_akses": userDetails['kd_akses'],
@@ -81,7 +87,7 @@ class AbsenController extends GetxController{
             "longitude": "${position.longitude}",
             "status_lokasi_masuk": statusLokasi,
             "kd_jenis_absensi": kdAbsen,
-            "alasan": alasanC.toString()
+            "alasan": alasanC!
           };
 
           // Api Request Absen Pegawai
@@ -103,7 +109,7 @@ class AbsenController extends GetxController{
                 message: "Berhasil melakukan absensi",
                 confirmButtonText: "Kembali",
                 onConfirm: () {
-                  Get.toNamed(Routes.home);
+                  Get.offAndToNamed(Routes.home);
                 },
                 onCancel: () {},
               ),
@@ -127,7 +133,11 @@ class AbsenController extends GetxController{
       Get.snackbar("Terjadi Kesalahan", "Gagal memperbarui posisi terakhir");
     }
   }
-
+  @override
+  void dispose() {
+    absenController.dispose();
+    super.dispose();
+  }
   // Stream untuk cek absen pegawai saat ini untuk update widget
   static Future<Map<String, dynamic>?> checkAbsen() async {
     Map<String, dynamic> userData =
@@ -163,8 +173,10 @@ class AbsenController extends GetxController{
         };
       }
     } catch (e) {
-     return null;
+      return null;
     }
     return null;
   }
 }
+
+
