@@ -9,7 +9,6 @@ import 'package:hris/app/config/api.dart';
 import 'package:hris/app/controllers/user_details_controller.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/widgets/confirmation_dialog.dart';
-import 'package:hris/app/widgets/text_dialog.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_ios/local_auth_ios.dart';

@@ -131,8 +131,22 @@ class PageIndexController extends GetxController {
                       ),
                       barrierDismissible: false,
                     );
-                    await AbsenController()
-                        .absenPegawai(position, kdAbsen, statusLokasi);
+                    Get.dialog(
+                      TextDialog(
+                        title: "Alasan",
+                        message: "Masukkan alasan WFH/Perjalanan Dinas",
+                        confirmButtonText: "Absen",
+                        cancelButtonText: "Batal",
+                        onConfirm: (text) async {
+                          await AbsenController()
+                              .absenPegawai(position, kdAbsen, statusLokasi, text);
+                        },
+                        onCancel: () {
+                          Get.back();
+                        },
+                        controller: AbsenController().alasanC,
+                      ),
+                    );
                   },
                 ),
               );
