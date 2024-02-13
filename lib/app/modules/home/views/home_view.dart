@@ -3,6 +3,7 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/controllers/absen_controller.dart';
 import 'package:hris/app/routes/app_pages.dart';
@@ -190,6 +191,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
+    ScreenScaler scaler = ScreenScaler();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -246,7 +248,12 @@ class HomeView extends StatelessWidget {
                         Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(w * 0.05),
+                              padding: EdgeInsets.only(
+                                top: scaler.getHeight(0.5),
+                                bottom: scaler.getHeight(0.5),
+                                left: scaler.getWidth(1.2),
+                                right: scaler.getWidth(1.2),
+                              ),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.rectangle,
                                 color: CupertinoColors.systemGrey5,
@@ -317,7 +324,12 @@ class HomeView extends StatelessWidget {
                         Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(w * 0.05),
+                              padding: EdgeInsets.only(
+                                top: scaler.getHeight(0.5),
+                                bottom: scaler.getHeight(0.5),
+                                left: scaler.getWidth(1.2),
+                                right: scaler.getWidth(1.2),
+                              ),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.rectangle,
                                 color: CupertinoColors.systemGrey5,

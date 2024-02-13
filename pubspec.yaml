@@ -24,6 +24,7 @@ dependencies:
   vector_math: ^2.1.4
   local_auth: ^2.1.8
   flutter_svg: ^2.0.9
+  flutter_screen_scaler: ^2.1.0
   flutter: 
     sdk: flutter
   local_auth_android: ^1.0.36
