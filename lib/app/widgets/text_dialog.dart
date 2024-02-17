@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hris/app/styles/styles.dart';
 
 class TextDialog extends StatelessWidget {

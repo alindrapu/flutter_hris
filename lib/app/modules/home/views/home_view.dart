@@ -2,6 +2,7 @@
 
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screen_scaler/flutter_screen_scaler.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ import 'package:hris/app/styles/styles.dart';
 import 'package:intl/intl.dart';
 import '../../../controllers/page_index_controller.dart';
 import '../controllers/home_controller.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class AnimatedHero extends StatefulWidget {
   const AnimatedHero({super.key});
@@ -185,11 +187,13 @@ class _AnimatedHeroState extends State<AnimatedHero> {
 class HomeView extends StatelessWidget {
   final pageC = Get.find<PageIndexController>();
   final homeC = Get.find<HomeController>();
+  final absenC = Get.put(AbsenController());
 
   HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting();
     double w = MediaQuery.of(context).size.width;
     ScreenScaler scaler = ScreenScaler();
 
@@ -417,73 +421,103 @@ class HomeView extends StatelessWidget {
                     child: const Text(
                       'Lebih Lengkap..',
                       style: TextStyle(
-                          color: Styles.themeLightDark,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                        color: Styles.themeLightDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   )
                 ],
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Material(
-                      color: Styles.themeTeal,
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      child: InkWell(
-                        onTap: () {
-                          Get.toNamed(Routes.detailPresensi);
-                        },
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(20)),
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            // color: Color.fromARGB(255, 96, 154, 179)
-                          ),
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Masuk",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      DateFormat.yMMMEd()
-                                          .format(DateTime.now()),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                Text(DateFormat.Hm().format(DateTime.now())),
-                                const SizedBox(height: 10),
-                                const Text(
-                                  "Keluar",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                                Text(DateFormat.Hm().format(DateTime.now())),
-                              ]),
-                        ),
+            FutureBuilder(
+                future: absenC.last5Days(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Styles.themeLight,
+                        backgroundColor: Colors.transparent,
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text("Error $snapshot");
+                  } else {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: absenC.historyList.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> history =
+                            absenC.historyList[index];
+
+                        if (kDebugMode) {
+                          print(history['tanggal_presensi']);
+                        }
+
+                        final historyDate = DateTime.parse(history['tanggal_presensi']);
+
+                        final historyIn = history['jam_masuk'] ?? "--:--:--";
+                        final historyOut = history['jam_keluar'] ?? "--:--:--";
+
+                        return Container(
+                          margin: const EdgeInsets.only(left: 10, right: 10),
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Material(
+                              color: Styles.themeTeal,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(20)),
+                              child: InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.detailPresensi);
+                                },
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(20)),
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: const BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20)),
+                                    // color: Color.fromARGB(255, 96, 154, 179)
+                                  ),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              "Masuk",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(DateFormat.yMMMMd('id_ID').format(historyDate),
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ],
+                                        ),
+                                        Text(historyIn),
+                                        const SizedBox(height: 10),
+                                        const Text(
+                                          "Keluar",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(historyOut),
+                                      ]),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                })
           ],
         ),
       ),

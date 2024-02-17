@@ -115,8 +115,8 @@ class PageIndexController extends GetxController {
                         confirmButtonText: "Absen",
                         cancelButtonText: "Batal",
                         onConfirm: (text) async {
-                          await AbsenController()
-                              .absenPegawai(position, kdAbsen, statusLokasi, text);
+                          await AbsenController().absenPegawai(
+                              position, kdAbsen, statusLokasi, text);
                         },
                         onCancel: () {},
                         controller: AbsenController().alasanC,
@@ -138,8 +138,8 @@ class PageIndexController extends GetxController {
                         confirmButtonText: "Absen",
                         cancelButtonText: "Batal",
                         onConfirm: (text) async {
-                          await AbsenController()
-                              .absenPegawai(position, kdAbsen, statusLokasi, text);
+                          await AbsenController().absenPegawai(
+                              position, kdAbsen, statusLokasi, text);
                         },
                         onCancel: () {
                           Get.back();
