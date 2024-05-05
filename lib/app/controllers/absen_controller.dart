@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_local_variable
 
 import 'dart:convert';
 
@@ -119,7 +119,7 @@ class AbsenController extends GetxController {
 
       // if (responsePosition.statusCode == 200) {
       try {
-         // Body absen pegawai
+        // Body absen pegawai
         final Map<String, dynamic> absenBody = {
           "kd_akses": userDetails['kd_akses'],
           "latitude": "${position.latitude}",
@@ -145,7 +145,7 @@ class AbsenController extends GetxController {
           Get.dialog(
             ConfirmationDialog(
               title: "Berhasil",
-              message: "Berhasil melakukan absensi",
+              message: "Berhasil melakukan presensi",
               confirmButtonText: "Kembali",
               onConfirm: () {
                 Get.offAndToNamed(Routes.home);
@@ -159,7 +159,7 @@ class AbsenController extends GetxController {
         Get.dialog(
           ConfirmationDialog(
             title: "Terjadi Kesalahan",
-            message: "Gagal melakukan absensi, silahkan coba lagi!",
+            message: "Gagal melakukan presensi, silahkan coba lagi!",
             confirmButtonText: "Kembali",
             onConfirm: () {
               Get.toNamed(Routes.home);

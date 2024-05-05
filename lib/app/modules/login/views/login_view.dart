@@ -8,13 +8,14 @@ import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Styles.themeDark,
         foregroundColor: Styles.themeLight,
-        title: const Text('Pedurenan AbsensiNET'),
+        title: const Text('Pedurenan PresensiNET'),
         centerTitle: true,
       ),
       body: ListView(

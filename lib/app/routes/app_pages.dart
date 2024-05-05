@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/add_pegawai/bindings/add_pegawai_binding.dart';
 import '../modules/add_pegawai/views/add_pegawai_view.dart';
+import '../modules/approval_cuti/bindings/approval_cuti_binding.dart';
+import '../modules/approval_cuti/views/approval_cuti_view.dart';
 import '../modules/detail_presensi/bindings/detail_presensi_binding.dart';
 import '../modules/detail_presensi/views/detail_presensi_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
@@ -16,8 +18,12 @@ import '../modules/new_kd_pass/bindings/new_kd_pass_binding.dart';
 import '../modules/new_kd_pass/views/new_kd_pass_view.dart';
 import '../modules/new_password/bindings/new_password_binding.dart';
 import '../modules/new_password/views/new_password_view.dart';
+import '../modules/pengajuan_cuti/bindings/pengajuan_cuti_binding.dart';
+import '../modules/pengajuan_cuti/views/pengajuan_cuti_view.dart';
 import '../modules/profile/bindings/profile_binding.dart';
 import '../modules/profile/views/profile_view.dart';
+import '../modules/riwayat_cuti/bindings/riwayat_cuti_binding.dart';
+import '../modules/riwayat_cuti/views/riwayat_cuti_view.dart';
 import '../modules/update_password/bindings/update_password_binding.dart';
 import '../modules/update_password/views/update_password_view.dart';
 import '../modules/update_profile/bindings/update_profile_binding.dart';
@@ -85,6 +91,21 @@ class AppPages {
       name: _Paths.detailPresensi,
       page: () => const DetailPresensiView(),
       binding: DetailPresensiBinding(),
+    ),
+    GetPage(
+      name: _Paths.pengajuanCuti,
+      page: () => const PengajuanCutiView(),
+      binding: PengajuanCutiBinding(),
+    ),
+    GetPage(
+      name: _Paths.approvalCuti,
+      page: () => const ApprovalCutiView(),
+      binding: ApprovalCutiBinding(),
+    ),
+    GetPage(
+      name: _Paths.riwayatCuti,
+      page: () => const RiwayatCutiView(),
+      binding: RiwayatCutiBinding(),
     ),
   ];
 }

@@ -49,7 +49,7 @@ class PageIndexController extends GetxController {
               Get.dialog(
                 ConfirmationDialog(
                   title: "ABSEN MASUK",
-                  message: "Anda berada di dalam area, lakukan absensi WFO?",
+                  message: "Anda berada di dalam area, lakukan presensi WFO?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
                   onConfirm: () async {
@@ -103,7 +103,7 @@ class PageIndexController extends GetxController {
               Get.dialog(
                 ConfirmationDialog(
                   title: "ABSEN MASUK",
-                  message: "Anda berada di luar area, pilih jenis absensi",
+                  message: "Anda berada di luar area, pilih jenis presensi",
                   confirmButtonText: "WFH",
                   cancelButtonText: "Perjalanan Dinas",
                   onConfirm: () async {

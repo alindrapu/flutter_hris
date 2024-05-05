@@ -87,6 +87,22 @@ class ProfileView extends GetView<ProfileController> {
                     title: const Text("Ubah Password"),
                   ),
                   const SizedBox(height: 10),
+                  ListTile(
+                    iconColor: Styles.themeDark,
+                    textColor: Styles.themeDark,
+                    onTap: () => Get.toNamed(Routes.pengajuanCuti),
+                    leading: const Icon(Icons.grass_outlined),
+                    title: const Text("Pengajuan Cuti"),
+                  ),
+                  const SizedBox(height: 10),
+                  ListTile(
+                    iconColor: Styles.themeDark,
+                    textColor: Styles.themeDark,
+                    onTap: () => Get.toNamed(Routes.riwayatCuti),
+                    leading: const Icon(Icons.history),
+                    title: const Text("Riwayat Cuti"),
+                  ),
+                  const SizedBox(height: 10),
                   if (userDetails['is_admin'].toString() == '1')
                     ListTile(
                       iconColor: Styles.themeDark,
@@ -103,7 +119,7 @@ class ProfileView extends GetView<ProfileController> {
                       textColor: Styles.themeDark,
                       onTap: () {},
                       leading: const Icon(Icons.note_add_rounded),
-                      title: const Text("Rekap Absensi Pegawai"),
+                      title: const Text("Rekap Presensi Pegawai"),
                     ),
                   if (userDetails['is_admin'].toString() == '1')
                     const SizedBox(height: 10),
@@ -111,7 +127,7 @@ class ProfileView extends GetView<ProfileController> {
                     ListTile(
                       iconColor: Styles.themeDark,
                       textColor: Styles.themeDark,
-                      onTap: () {},
+                      onTap: () => Get.toNamed(Routes.approvalCuti),
                       leading: const Icon(Icons.approval_rounded),
                       title: const Text("Approval Cuti Pegawai"),
                     ),
@@ -131,7 +147,7 @@ class ProfileView extends GetView<ProfileController> {
                             controller.logout();
                           },
                           cancelButtonText: "Batal",
-                          onCancel: (){},
+                          onCancel: () {},
                         ),
                       )
                     },

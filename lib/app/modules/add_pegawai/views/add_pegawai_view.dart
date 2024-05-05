@@ -19,7 +19,7 @@ class AddPegawaiView extends StatefulWidget {
   const AddPegawaiView({super.key});
 
   @override
-  _AddPegawaiViewState createState() => _AddPegawaiViewState();
+  State<AddPegawaiView> createState() => _AddPegawaiViewState();
 }
 
 class _AddPegawaiViewState extends State<AddPegawaiView> {
@@ -40,7 +40,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => {
-                Get.offAllNamed(Routes.home),
+                Get.offAllNamed(Routes.profile),
               },
             ),
           ),
