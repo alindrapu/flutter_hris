@@ -73,14 +73,6 @@ class LoginView extends GetView<LoginController> {
                   controller.isLoading.isFalse ? "Masuk" : "Sedang Proses.."),
             ),
           ),
-          TextButton(
-              onPressed: () {
-                Get.toNamed(Routes.forgotPassword);
-              },
-              child: const Text(
-                "Lupa kata sandi? Klik di sini",
-                style: TextStyle(color: Styles.themeDark),
-              )),
         ],
       ),
     );

@@ -48,7 +48,7 @@ class PageIndexController extends GetxController {
               // Absen Masuk
               Get.dialog(
                 ConfirmationDialog(
-                  title: "ABSEN MASUK",
+                  title: "PRESENSI MASUK",
                   message: "Anda berada di dalam area, lakukan presensi WFO?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
@@ -74,8 +74,9 @@ class PageIndexController extends GetxController {
               //   Absen Keluar
               Get.dialog(
                 ConfirmationDialog(
-                  title: "ABSEN KELUAR",
-                  message: "Anda berada di dalam area, lakukan absen keluar?",
+                  title: "PRESENSI KELUAR",
+                  message:
+                      "Anda berada di dalam area, lakukan presensi keluar?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
                   onConfirm: () async {
@@ -94,7 +95,7 @@ class PageIndexController extends GetxController {
               );
             } else {
               Get.snackbar("Terjadi Kesalahan",
-                  "Absen masuk dan absen keluar Anda hari ini sudah tercatat! Tidak bisa melakukan absen lagi");
+                  "Presensi masuk dan presensi keluar Anda hari ini sudah tercatat! Tidak bisa melakukan absen lagi");
             }
           } else if (double.parse(response['distance']['jarakM']) > 200) {
             // Absen luar area
@@ -102,7 +103,7 @@ class PageIndexController extends GetxController {
             if (cekAbsenMasuk?['jamMasuk'] == null) {
               Get.dialog(
                 ConfirmationDialog(
-                  title: "ABSEN MASUK",
+                  title: "PRESENSI MASUK",
                   message: "Anda berada di luar area, pilih jenis presensi",
                   confirmButtonText: "WFH",
                   cancelButtonText: "Perjalanan Dinas",
@@ -154,8 +155,8 @@ class PageIndexController extends GetxController {
                 cekAbsenMasuk?['jamKeluar'] == null) {
               Get.dialog(
                 ConfirmationDialog(
-                  title: "ABSEN KELUAR",
-                  message: "Anda berada di luar area, lakukan absen keluar?",
+                  title: "PRESENSI KELUAR",
+                  message: "Anda berada di luar area, lakukan presensi keluar?",
                   confirmButtonText: "Ya",
                   cancelButtonText: "Kembali",
                   onConfirm: () async {

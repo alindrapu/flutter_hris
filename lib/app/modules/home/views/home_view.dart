@@ -285,14 +285,14 @@ class HomeView extends StatelessWidget {
                                     ),
                                   if (jamMasuk == "--:--:--")
                                     const Text(
-                                      "Belum Absen!",
+                                      "Belum Presensi!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
                                     ),
                                   if (jamMasuk != "--:--:--" && isLate == false)
                                     const Text(
-                                      "Sudah Absen!",
+                                      "Sudah Presensi!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
@@ -355,14 +355,14 @@ class HomeView extends StatelessWidget {
                                   ),
                                   if (jamKeluar == "--:--:--")
                                     const Text(
-                                      "Belum Absen!",
+                                      "Belum Presensi!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
                                     ),
                                   if (jamKeluar != "--:--:--")
                                     const Text(
-                                      "Sudah Absen!",
+                                      "Sudah Presensi!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: Styles.themeDark),
@@ -455,7 +455,8 @@ class HomeView extends StatelessWidget {
                           print(history['tanggal_presensi']);
                         }
 
-                        final historyDate = DateTime.parse(history['tanggal_presensi']);
+                        final historyDate =
+                            DateTime.parse(history['tanggal_presensi']);
 
                         final historyIn = history['jam_masuk'] ?? "--:--:--";
                         final historyOut = history['jam_keluar'] ?? "--:--:--";
@@ -494,7 +495,9 @@ class HomeView extends StatelessWidget {
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text(DateFormat.yMMMMd('id_ID').format(historyDate),
+                                            Text(
+                                              DateFormat.yMMMMd('id_ID')
+                                                  .format(historyDate),
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),

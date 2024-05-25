@@ -1,5 +1,5 @@
 class Api {
-  static const _baseUrl = "https://lamprey-fluent-bison.ngrok-free.app/api";
+  static const _baseUrl = "https://absensinet-api.alindraputra.info/api";
   static const login = "$_baseUrl/login";
   static const register = "$_baseUrl/register";
   static const logout = "$_baseUrl/logout";

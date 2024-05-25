@@ -90,10 +90,10 @@ class AbsenController extends GetxController {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
       if (canCheckBiometrics) {
         final bool didAuthenticate = await localAuth.authenticate(
-          localizedReason: 'Lakukan otentikasi untuk melakukan Absen',
+          localizedReason: 'Lakukan otentikasi untuk melakukan presensi',
           authMessages: const <AuthMessages>[
             AndroidAuthMessages(
-              signInTitle: 'Otentikasi diperlukan untuk melakukan absen!',
+              signInTitle: 'Otentikasi diperlukan untuk melakukan presensi!',
               cancelButton: 'No thanks',
             ),
             IOSAuthMessages(
