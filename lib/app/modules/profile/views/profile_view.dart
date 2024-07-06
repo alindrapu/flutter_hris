@@ -117,7 +117,21 @@ class ProfileView extends GetView<ProfileController> {
                     ListTile(
                       iconColor: Styles.themeDark,
                       textColor: Styles.themeDark,
-                      onTap: () {},
+                      onTap: () => {
+                        Get.dialog(
+                          ConfirmationDialog(
+                            title: "Konfirmasi",
+                            message:
+                                "Apakah anda yakin untuk unduh data rekap?",
+                            confirmButtonText: "Ya",
+                            onConfirm: () {
+                              controller.downloadPresensiExcel();
+                            },
+                            cancelButtonText: "Batal",
+                            onCancel: () {},
+                          ),
+                        )
+                      },
                       leading: const Icon(Icons.note_add_rounded),
                       title: const Text("Rekap Presensi Pegawai"),
                     ),

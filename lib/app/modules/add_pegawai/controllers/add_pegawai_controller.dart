@@ -86,7 +86,7 @@ class AddPegawaiController extends GetxController {
         "nm_agama": agamaC.text,
         "nm_jabatan": jabatanC.text,
         "sts_kepeg": stsKepegC.text,
-        "password": "rahasia",
+        "password": "password",
         "added_kd_akses": 0
       };
 
@@ -97,6 +97,9 @@ class AddPegawaiController extends GetxController {
       };
 
       String jsonBody = jsonEncode(body);
+      if (kDebugMode) {
+        print(jsonBody);
+      }
       String url = Api.register;
 
       try {
@@ -105,6 +108,9 @@ class AddPegawaiController extends GetxController {
 
         if (response.statusCode == 200) {
           Get.snackbar("Berhasil", "Pegawai baru berhasil ditambahkan");
+          if (kDebugMode) {
+            print(response.body);
+          }
           Get.offAllNamed(Routes.addPegawai);
         }
       } catch (e) {

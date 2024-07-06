@@ -2,8 +2,12 @@ import 'package:get/get.dart';
 
 import '../modules/add_pegawai/bindings/add_pegawai_binding.dart';
 import '../modules/add_pegawai/views/add_pegawai_view.dart';
+import '../modules/all_presensi/bindings/all_presensi_binding.dart';
+import '../modules/all_presensi/views/all_presensi_view.dart';
 import '../modules/approval_cuti/bindings/approval_cuti_binding.dart';
 import '../modules/approval_cuti/views/approval_cuti_view.dart';
+import '../modules/detail_approval_cuti/bindings/detail_approval_cuti_binding.dart';
+import '../modules/detail_approval_cuti/views/detail_approval_cuti_view.dart';
 import '../modules/detail_presensi/bindings/detail_presensi_binding.dart';
 import '../modules/detail_presensi/views/detail_presensi_view.dart';
 import '../modules/forgot_password/bindings/forgot_password_binding.dart';
@@ -89,7 +93,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.detailPresensi,
-      page: () => const DetailPresensiView(),
+      page: () => DetailPresensiView(),
       binding: DetailPresensiBinding(),
     ),
     GetPage(
@@ -106,6 +110,16 @@ class AppPages {
       name: _Paths.riwayatCuti,
       page: () => const RiwayatCutiView(),
       binding: RiwayatCutiBinding(),
+    ),
+    GetPage(
+      name: _Paths.allPresensi,
+      page: () => const AllPresensiView(),
+      binding: AllPresensiBinding(),
+    ),
+    GetPage(
+      name: _Paths.detailApprovalCuti,
+      page: () => DetailApprovalCutiView(),
+      binding: DetailApprovalCutiBinding(),
     ),
   ];
 }

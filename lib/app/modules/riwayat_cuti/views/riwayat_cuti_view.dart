@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import '../controllers/riwayat_cuti_controller.dart';
 
 class RiwayatCutiView extends GetView<RiwayatCutiController> {
-  const RiwayatCutiView({Key? key}) : super(key: key);
+  const RiwayatCutiView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

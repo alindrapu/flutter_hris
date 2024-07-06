@@ -18,6 +18,8 @@ abstract class Routes {
   static const pengajuanCuti = _Paths.pengajuanCuti;
   static const approvalCuti = _Paths.approvalCuti;
   static const riwayatCuti = _Paths.riwayatCuti;
+  static const allPresensi = _Paths.allPresensi;
+  static const detailApprovalCuti = _Paths.detailApprovalCuti;
 }
 
 abstract class _Paths {
@@ -37,4 +39,6 @@ abstract class _Paths {
   static const pengajuanCuti = '/pengajuan-cuti';
   static const approvalCuti = '/approval-cuti';
   static const riwayatCuti = '/riwayat-cuti';
+  static const allPresensi = '/all-presensi';
+  static const detailApprovalCuti = '/detail-approval-cuti';
 }

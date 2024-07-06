@@ -65,11 +65,11 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
                   (json.decode(response.body) as Map<String, dynamic>)['value'];
               List<JenisCuti> jenisCuti = [];
 
-              allJenisCuti.forEach((element) {
+              for (var element in allJenisCuti) {
                 jenisCuti.add(JenisCuti(
                     nmJenisCuti: element['nm_jenis_cuti'],
                     kdJenisCuti: element['kd_jenis_cuti']));
-              });
+              }
 
               return jenisCuti;
             },

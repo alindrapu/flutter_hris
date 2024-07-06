@@ -22,7 +22,7 @@ class AnimatedHero extends StatefulWidget {
 }
 
 class _AnimatedHeroState extends State<AnimatedHero> {
-  final homeC = Get.find<HomeController>();
+  final homeC = Get.put(HomeController());
   double padValueTop = 0.03;
   double padValueBot = 0.0;
 
@@ -417,7 +417,9 @@ class HomeView extends StatelessWidget {
                         fontSize: 16),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(Routes.allPresensi);
+                    },
                     child: const Text(
                       'Lebih Lengkap..',
                       style: TextStyle(
@@ -431,29 +433,37 @@ class HomeView extends StatelessWidget {
               ),
             ),
             FutureBuilder(
-                future: absenC.last5Days(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: Styles.themeLight,
-                        backgroundColor: Colors.transparent,
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text("Error $snapshot");
-                  } else {
+              future: absenC.last5Days(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Styles.themeLight,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Error $snapshot");
+                } else {
+                  return Obx(() {
+                    if (absenC.historyList.isEmpty) {
+                      return const Center(child: Text('Tidak ada data'));
+                    }
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: absenC.historyList.length,
                       itemBuilder: (context, index) {
+                        if (index >= absenC.historyList.length) {
+                          // Safeguard against invalid index access
+                          return const SizedBox.shrink();
+                        }
                         Map<String, dynamic> history =
                             absenC.historyList[index];
-
-                        if (kDebugMode) {
-                          print(history['tanggal_presensi']);
-                        }
+                        //
+                        // if (kDebugMode) {
+                        //   print(history);
+                        // }
 
                         final historyDate =
                             DateTime.parse(history['tanggal_presensi']);
@@ -471,7 +481,8 @@ class HomeView extends StatelessWidget {
                                   const BorderRadius.all(Radius.circular(20)),
                               child: InkWell(
                                 onTap: () {
-                                  Get.toNamed(Routes.detailPresensi);
+                                  Get.toNamed(Routes.detailPresensi,
+                                      arguments: history);
                                 },
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(20)),
@@ -519,8 +530,10 @@ class HomeView extends StatelessWidget {
                         );
                       },
                     );
-                  }
-                })
+                  });
+                }
+              },
+            )
           ],
         ),
       ),

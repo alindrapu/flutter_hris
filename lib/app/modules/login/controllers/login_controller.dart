@@ -60,7 +60,7 @@ class LoginController extends GetxController {
           );
 
           print(response.body);
-          if (passC.text == "rahasia" &&
+          if (passC.text == "password" &&
               responseData['user']['added_kd_akses'] == 0) {
             Get.offAllNamed(Routes.newKdPass);
           } else {

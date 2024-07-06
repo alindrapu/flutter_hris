@@ -260,7 +260,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
           ),
           const SizedBox(height: 20),
           DropdownSearch<String>(
-            items: const ["Admin", "Pegawai"],
+            items: const ["Admin", "Perangkat Desa"],
             popupProps: const PopupProps.dialog(),
             onChanged: (value) => {controller.roleC.text = value!},
             dropdownDecoratorProps: const DropDownDecoratorProps(

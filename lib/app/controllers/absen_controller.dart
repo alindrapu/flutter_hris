@@ -17,50 +17,65 @@ import 'package:http/http.dart' as http;
 class AbsenController extends GetxController {
   TextEditingController alasanC = TextEditingController();
   RxList<Map<String, dynamic>> historyList = <Map<String, dynamic>>[].obs;
+  bool _isFetching = false;
+  static bool _isFetchingCheckAbsen = false;
 
   get absenController => null;
 
+  // TODO: save data to local storage to prevent multi request, when checkin or checkout, update the state
   Future<void> last5Days() async {
-    Map<String, dynamic> userData =
-        await userDetailsController.getUserDetails();
-    final userDetails = userData;
+    if (_isFetching) return;
 
-    // Headers
-    final Map<String, String> headers = {
-      "Accept": "application/json",
-      "Authorization": "Bearer ${userDetails["token"]}",
-      "Content-Type": "application/json",
-    };
-    final String kdAkses = userDetails['kd_akses'];
+    _isFetching = true;
 
-    final Map<String, String> body = {
-      "kd_akses": kdAkses,
-    };
-
-    // API Request
-    String url = Api.last5Days;
-    final jsonBody = jsonEncode(body);
-    // print(jsonBody);
-    final response =
-        await http.post(Uri.parse(url), headers: headers, body: jsonBody);
     try {
+      Map<String, dynamic> userData =
+          await userDetailsController.getUserDetails();
+      final userDetails = userData;
+
+      // Headers
+      final Map<String, String> headers = {
+        "Accept": "application/json",
+        "Authorization": "Bearer ${userDetails["token"]}",
+        "Content-Type": "application/json",
+      };
+      final String kdAkses = userDetails['kd_akses'];
+
+      final Map<String, String> body = {
+        "kd_akses": kdAkses,
+      };
+
+      // API Request
+      String url = Api.last5Days;
+      final jsonBody = jsonEncode(body);
       final response =
           await http.post(Uri.parse(url), headers: headers, body: jsonBody);
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
-        List<dynamic> data = responseData['data'];
-        historyList.value = List<Map<String, dynamic>>.from(data);
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
+        if (responseData.containsKey('data') && responseData['data'] is List) {
+          List<dynamic> data = responseData['data'];
+          if (data.isNotEmpty) {
+            historyList.value = List<Map<String, dynamic>>.from(data);
+          } else {
+            print("Error: Received empty data list");
+          }
+        } else {
+          print("Error: Invalid data format");
+        }
       } else {
         print("Error: ${response.statusCode} - ${response.reasonPhrase}");
         print("Response Body: ${response.body}");
       }
     } catch (e) {
       print("Error: $e");
+    } finally {
+      _isFetching = false;
     }
   }
 
-  // Future untuk absen masuk dan keluar pegawai
+// Future untuk absen masuk dan keluar pegawai
   Future<void> absenPegawai(Position position, int kdAbsen, String statusLokasi,
       [String? alasanC]) async {
     Map<String, dynamic> userData =
@@ -180,30 +195,35 @@ class AbsenController extends GetxController {
     super.dispose();
   }
 
-  // Stream untuk cek absen pegawai saat ini untuk update widget
+// Stream untuk cek absen pegawai saat ini untuk update widget
   static Future<Map<String, dynamic>?> checkAbsen() async {
-    Map<String, dynamic> userData =
-        await userDetailsController.getUserDetails();
-    final userDetails = userData;
+    if (_isFetchingCheckAbsen) return null;
 
-    // Headers
-    final Map<String, String> headers = {
-      "Accept": "application/json",
-      "Authorization": "Bearer ${userDetails["token"]}",
-      "Content-Type": "application/json",
-    };
+    _isFetchingCheckAbsen = true;
 
-    // Body update current position
-    final Map<String, dynamic> body = {
-      "kd_akses": userDetails['kd_akses'],
-    };
-
-    // API Request
-    String jsonBody = jsonEncode(body);
-    String url = Api.checkAbsen;
-    final response =
-        await http.post(Uri.parse(url), headers: headers, body: jsonBody);
     try {
+      Map<String, dynamic> userData =
+          await userDetailsController.getUserDetails();
+      final userDetails = userData;
+
+// Headers
+      final Map<String, String> headers = {
+        "Accept": "application/json",
+        "Authorization": "Bearer ${userDetails["token"]}",
+        "Content-Type": "application/json",
+      };
+
+// Body update current position
+      final Map<String, dynamic> body = {
+        "kd_akses": userDetails['kd_akses'],
+      };
+
+// API Request
+      String jsonBody = jsonEncode(body);
+      String url = Api.checkAbsen;
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: jsonBody);
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final jamMasuk = responseData['message'][0]['jam_masuk'];
@@ -215,7 +235,9 @@ class AbsenController extends GetxController {
         };
       }
     } catch (e) {
-      return null;
+      print("Error: $e");
+    } finally {
+      _isFetchingCheckAbsen = false;
     }
     return null;
   }

@@ -15,4 +15,9 @@ class Api {
   static const checkAbsen = "$_baseUrl/check-presensi";
   static const last5Days = "$_baseUrl/last-v-days";
   static const requestCuti = "$_baseUrl/request-cuti";
+  static const histories = "$_baseUrl/histories";
+  static const detailPresensi = "$_baseUrl/detail-presensi";
+  static const listApproveCuti = "$_baseUrl/get-list-permohonan-cuti";
+  static const downloadLogPresensi = "$_baseUrl/presensi/export-xls";
+  static const approveCuti = "$_baseUrl/update-cuti";
 }

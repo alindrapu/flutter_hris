@@ -16,8 +16,7 @@ class ApprovalCutiView extends StatefulWidget {
 }
 
 class _ApprovalCutiViewState extends State<ApprovalCutiView> {
-  final ApprovalCutiController controller = Get.put(ApprovalCutiController());
-  final absenC = Get.put(AbsenController());
+  final approveC = Get.put(ApprovalCutiController());
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
       ),
       body: ListView(padding: const EdgeInsets.all(20), children: [
         FutureBuilder(
-            future: absenC.last5Days(),
+            future: approveC.listApproveCuti(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
@@ -57,19 +56,15 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: absenC.historyList.length,
+                  itemCount: approveC.approveList.length,
                   itemBuilder: (context, index) {
-                    Map<String, dynamic> history = absenC.historyList[index];
+                    Map<String, dynamic> list = approveC.approveList[index];
 
-                    if (kDebugMode) {
-                      print(history['tanggal_presensi']);
-                    }
-
-                    final historyDate =
-                        DateTime.parse(history['tanggal_presensi']);
-
-                    final historyIn = history['jam_masuk'] ?? "--:--:--";
-                    final historyOut = history['jam_keluar'] ?? "--:--:--";
+                    final tanggalMulai = DateTime.parse(list['tanggal_mulai']);
+                    final tanggalSelesai =
+                        DateTime.parse(list['tanggal_selesai']);
+                    final tanggalPengajuan =
+                        DateTime.parse(list['tanggal_pengajuan']);
 
                     return Container(
                       margin: const EdgeInsets.only(left: 10, right: 10),
@@ -81,7 +76,8 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                               const BorderRadius.all(Radius.circular(20)),
                           child: InkWell(
                             onTap: () {
-                              Get.toNamed(Routes.detailPresensi);
+                              Get.toNamed(Routes.detailApprovalCuti,
+                                  arguments: list);
                             },
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20)),
@@ -93,34 +89,63 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                                 // color: Color.fromARGB(255, 96, 154, 179)
                               ),
                               child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          "Masuk",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          DateFormat.yMMMMd('id_ID')
-                                              .format(historyDate),
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(historyIn),
-                                    const SizedBox(height: 10),
-                                    const Text(
-                                      "Keluar",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(historyOut),
-                                  ]),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        list['nama'].toString().toUpperCase(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        list['nm_jabatan']
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 17),
+                                      ),
+                                    ],
+                                  ),
+                                  const Divider(
+                                    thickness: 2,
+                                    color: Styles.themeDark,
+                                    indent: 2,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Tanggal Pengajuan Cuti",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        list['nm_jenis_cuti']
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Styles.themeCancel),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    DateFormat.yMMMMd('id_ID')
+                                        .format(tanggalPengajuan),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
                             ),
                           ),
                         ),
