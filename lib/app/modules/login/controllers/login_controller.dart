@@ -46,6 +46,8 @@ class LoginController extends GetxController {
           final String jabatan = responseData['jabatan'];
           final String agama = responseData['agama'];
           final int stsKepeg = responseData['sts_kepeg'];
+          final String alamat = responseData['alamat'];
+          final String telp = responseData['telp'];
 
           await storeUserData(
             token: token,
@@ -57,10 +59,12 @@ class LoginController extends GetxController {
             jabatan: jabatan,
             agama: agama,
             stsKepeg: stsKepeg,
+            alamat: alamat,
+            telp: telp,
           );
 
           print(response.body);
-          if (passC.text == "rahasia" &&
+          if (passC.text == "password" &&
               responseData['user']['added_kd_akses'] == 0) {
             Get.offAllNamed(Routes.newKdPass);
           } else {
@@ -100,6 +104,8 @@ class LoginController extends GetxController {
     required String jabatan,
     required String agama,
     required int stsKepeg,
+    required String alamat,
+    required String telp,
   }) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('token', token);
@@ -111,5 +117,7 @@ class LoginController extends GetxController {
     prefs.setString('nm_jabatan', jabatan);
     prefs.setString('nm_agama', agama);
     prefs.setInt('sts_kepeg', stsKepeg);
+    prefs.setString('alamat', alamat);
+    prefs.setString('telp', telp);
   }
 }

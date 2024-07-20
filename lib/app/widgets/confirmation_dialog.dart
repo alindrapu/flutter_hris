@@ -9,14 +9,15 @@ class ConfirmationDialog extends StatelessWidget {
   final String? confirmButtonText;
   final String? cancelButtonText;
   final Function onConfirm;
+  final Function onCancel;
 
-  const ConfirmationDialog({
-    super.key,
+  const ConfirmationDialog({super.key,
     required this.title,
     required this.message,
     required this.confirmButtonText,
     this.cancelButtonText,
     required this.onConfirm,
+    required this.onCancel,
   });
 
   @override
@@ -51,6 +52,9 @@ class ConfirmationDialog extends StatelessWidget {
                     Text(
                       message,
                       textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
                     const SizedBox(height: 20),
                     // Buttons
@@ -71,7 +75,10 @@ class ConfirmationDialog extends StatelessWidget {
                                 Navigator.of(context).pop();
                                 await onConfirm();
                               },
-                              child: Text(confirmButtonText!),
+                              child: Text(
+                                confirmButtonText!,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         const SizedBox(width: 10),
@@ -86,10 +93,14 @@ class ConfirmationDialog extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
-                              onPressed: () {
+                              onPressed: () async {
                                 Navigator.of(context).pop();
+                                await onCancel();
                               },
-                              child: Text(cancelButtonText!),
+                              child: Text(
+                                cancelButtonText!,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                       ],

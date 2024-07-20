@@ -2,10 +2,10 @@ name: hris
 version: 1.0.0+1
 publish_to: none
 description: A new Flutter project.
-environment: 
+environment:
   sdk: '>=3.2.0 <5.0.0'
 
-dependencies: 
+dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.6
   http: ^1.1.2
@@ -21,24 +21,33 @@ dependencies:
   convex_bottom_bar: ^3.2.0
   geolocator: 10.1.0
   geocoding: ^2.1.1
+  vector_math: ^2.1.4
   local_auth: ^2.1.8
-  flutter: 
+  flutter_svg: ^2.0.9
+  flutter_screen_scaler: ^2.1.0
+  flutter:
     sdk: flutter
   local_auth_android: ^1.0.36
   local_auth_ios: ^1.1.6
+  permission_handler: ^10.2.0
+  path_provider: ^2.0.11
+  flutter_local_notifications: ^12.0.4
+  open_filex: ^4.4.0
+  flutter_downloader: ^1.11.7
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^3.0.1
-  flutter_test: 
+  flutter_test:
     sdk: flutter
 
-flutter: 
-  assets: 
+flutter:
+  assets:
     - assets/
     - assets/img/
-  fonts: 
+    - assets/img/bg_logo.svg
+  fonts:
     - family: Poppins
-      fonts: 
+      fonts:
         - asset: fonts/Poppins-Bold.ttf
           weight: 700
         - asset: fonts/Poppins-Medium.ttf

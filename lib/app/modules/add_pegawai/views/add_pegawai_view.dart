@@ -19,7 +19,7 @@ class AddPegawaiView extends StatefulWidget {
   const AddPegawaiView({super.key});
 
   @override
-  _AddPegawaiViewState createState() => _AddPegawaiViewState();
+  State<AddPegawaiView> createState() => _AddPegawaiViewState();
 }
 
 class _AddPegawaiViewState extends State<AddPegawaiView> {
@@ -40,7 +40,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             child: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => {
-                Get.offAllNamed(Routes.home),
+                Get.offAllNamed(Routes.profile),
               },
             ),
           ),
@@ -260,7 +260,7 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
           ),
           const SizedBox(height: 20),
           DropdownSearch<String>(
-            items: const ["Admin", "Pegawai"],
+            items: const ["Admin", "Perangkat Desa"],
             popupProps: const PopupProps.dialog(),
             onChanged: (value) => {controller.roleC.text = value!},
             dropdownDecoratorProps: const DropDownDecoratorProps(
@@ -285,9 +285,9 @@ class _AddPegawaiViewState extends State<AddPegawaiView> {
             () => ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Styles.themeDark),
+                    WidgetStateProperty.all<Color>(Styles.themeDark),
                 foregroundColor:
-                    MaterialStateProperty.all<Color>(Styles.themeLight),
+                    WidgetStateProperty.all<Color>(Styles.themeLight),
               ),
               onPressed: () async {
                 if (controller.isLoading.isFalse) {

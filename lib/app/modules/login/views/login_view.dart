@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hris/app/routes/app_pages.dart';
 import 'package:hris/app/styles/styles.dart';
 
 import 'package:get/get.dart';
@@ -8,13 +7,14 @@ import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Styles.themeDark,
         foregroundColor: Styles.themeLight,
-        title: const Text('Pedurenan AbsensiNET'),
+        title: const Text('Pedurenan PresensiNET'),
         centerTitle: true,
       ),
       body: ListView(
@@ -59,9 +59,9 @@ class LoginView extends GetView<LoginController> {
             () => ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                    MaterialStateProperty.all<Color>(Styles.themeDark),
+                    WidgetStateProperty.all<Color>(Styles.themeDark),
                 foregroundColor:
-                    MaterialStateProperty.all<Color>(Styles.themeLight),
+                    WidgetStateProperty.all<Color>(Styles.themeLight),
               ),
               onPressed: () async {
                 if (controller.isLoading.isFalse) {
@@ -72,14 +72,6 @@ class LoginView extends GetView<LoginController> {
                   controller.isLoading.isFalse ? "Masuk" : "Sedang Proses.."),
             ),
           ),
-          TextButton(
-              onPressed: () {
-                Get.toNamed(Routes.forgotPassword);
-              },
-              child: const Text(
-                "Lupa kata sandi? Klik di sini",
-                style: TextStyle(color: Styles.themeDark),
-              )),
         ],
       ),
     );
