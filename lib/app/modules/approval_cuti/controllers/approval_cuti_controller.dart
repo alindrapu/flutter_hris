@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
 import 'package:hris/app/controllers/user_details_controller.dart';
@@ -40,23 +41,39 @@ class ApprovalCutiController extends GetxController {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        print(responseData);
+        if (kDebugMode) {
+          if (kDebugMode) {
+            print(responseData);
+          }
+        }
         if (responseData.containsKey('data') && responseData['data'] is List) {
           List<dynamic> data = responseData['data'];
+          List<String> total = responseData['total'];
           if (data.isNotEmpty) {
             approveList.value = List<Map<String, dynamic>>.from(data);
           } else {
-            print("Error: Received empty data list");
+            approveList.value = List<Map<String, dynamic>>.from(total);
+            if (kDebugMode) {
+              print("Error: Received empty data list");
+            }
           }
         } else {
-          print("Error: Invalid data format");
+          if (kDebugMode) {
+            print("Error: Invalid data format");
+          }
         }
       } else {
-        print("Error: ${response.statusCode} - ${response.reasonPhrase}");
-        print("Response Body: ${response.body}");
+        if (kDebugMode) {
+          print("Error: ${response.statusCode} - ${response.reasonPhrase}");
+        }
+        if (kDebugMode) {
+          print("Response Body: ${response.body}");
+        }
       }
     } catch (e) {
-      print("Error: $e");
+      if (kDebugMode) {
+        print("Error: $e");
+      }
     } finally {
       _isFetching = false;
     }

@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hris/app/controllers/absen_controller.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:hris/app/routes/app_pages.dart';
 import 'package:intl/intl.dart';
@@ -65,7 +63,6 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                         DateTime.parse(list['tanggal_selesai']);
                     final tanggalPengajuan =
                         DateTime.parse(list['tanggal_pengajuan']);
-
                     return Container(
                       margin: const EdgeInsets.only(left: 10, right: 10),
                       child: Padding(
