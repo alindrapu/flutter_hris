@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,7 @@ class DetailApprovalCutiController extends GetxController {
   RxBool isLoading = false.obs;
 
   Future<void> approveCuti(
-      String kdAkses, int id, int kdStatusPermohonan) async {
+      String kdAkses, int id, bool statusPersetujuan) async {
     // 1	Permohonan Disetujui
     // 2	Menunggu Persetujuan Sekretaris
     // 3	Menunggu Persetujuan Kepala Desa
@@ -30,13 +29,15 @@ class DetailApprovalCutiController extends GetxController {
       "Content-Type": "application/json",
     };
 
-    print(userDetails);
+    if (kDebugMode) {
+      print(userDetails);
+    }
 
     final Map<String, dynamic> body = {
       "kd_akses_approver": '${userDetails['kd_akses']}',
       "kd_akses_pemohon": kdAkses,
       "id_permohonan": id,
-      "kd_status_permohonan": kdStatusPermohonan
+      "status_persetujuan": statusPersetujuan
     };
 
     String jsonBody = jsonEncode(body);

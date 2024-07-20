@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:hris/app/controllers/user_details_controller.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:hris/app/widgets/confirmation_dialog.dart';
 import 'package:intl/intl.dart';
@@ -263,27 +262,8 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                               confirmButtonText: "Ya",
                               cancelButtonText: "Kembali",
                               onConfirm: () async {
-                                int kdStatusPermohonan = 0;
-                                Map<String, dynamic> userData =
-                                    await userDetailsController
-                                        .getUserDetails();
-                                final userDetails = userData;
+                                bool statusPersetujuan = true;
 
-                                if ((userDetails['nm_jabatan'] ==
-                                            'KEPALA DESA' &&
-                                        data['nm_jabatan'] ==
-                                            'SEKRETARIS DESA') ||
-                                    (userDetails['nm_jabatan'] ==
-                                            "SEKRETARIS DESA" &&
-                                        data['nm_jabatan'] == 'KEPALA DESA')) {
-                                  kdStatusPermohonan = 1;
-                                } else if (userDetails['nm_jabatan'] ==
-                                    'KEPALA DESA') {
-                                  kdStatusPermohonan = 1;
-                                } else if (userDetails['nm_jabatan'] ==
-                                    "SEKRETARIS DESA") {
-                                  kdStatusPermohonan = 3;
-                                }
                                 Get.dialog(
                                   const Center(
                                     child: CircularProgressIndicator(),
@@ -292,7 +272,7 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                                 );
                                 await DetailApprovalCutiController()
                                     .approveCuti(data['kd_akses'], data['id'],
-                                        kdStatusPermohonan);
+                                        statusPersetujuan);
                               },
                               onCancel: () {
                                 Get.back();
@@ -317,7 +297,7 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                           ),
                         ),
                         onPressed: () {
-                          const kdStatusPermohonan = 0;
+                          bool statusPersetujuan = false;
                           Get.dialog(
                             ConfirmationDialog(
                               title: "KONFIRMASI TOLAK CUTI",
@@ -334,7 +314,7 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                                 );
                                 await DetailApprovalCutiController()
                                     .approveCuti(data['kd_akses'], data['id'],
-                                        kdStatusPermohonan);
+                                        statusPersetujuan);
                               },
                               onCancel: () {
                                 Get.back();
