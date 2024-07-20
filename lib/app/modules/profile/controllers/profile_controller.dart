@@ -68,7 +68,7 @@ class ProfileController extends GetxController {
 
   Future<void> downloadPresensiExcel() async {
     // Ensure the required permissions are granted
-    if (await Permission.storage.request().isGranted) {
+    if (await Permission.photos.request().isGranted) {
       // Define the API endpoint
       String url = Api.downloadLogPresensi;
 
@@ -88,7 +88,7 @@ class ProfileController extends GetxController {
       // Check if the request was successful
       if (response.statusCode == 200) {
         // Get the external storage directory
-        Directory? directory = await getExternalStorageDirectory();
+        Directory? directory = await getDownloadsDirectory();
         directory ??= await getApplicationDocumentsDirectory();
 
         // Create a custom directory if necessary
@@ -121,6 +121,7 @@ class ProfileController extends GetxController {
         print('Failed to download file: ${response.statusCode}');
       }
     } else {
+      openAppSettings();
       print('Storage permission not granted');
     }
   }
