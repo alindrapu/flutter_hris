@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hris/app/controllers/user_details_controller.dart';
 
 class UpdateProfileController extends GetxController {
   RxBool isLoading = false.obs;
 
-  // TextEditingController emailC= TextEditingController();
-  TextEditingController nikC = TextEditingController();
-  TextEditingController noTelpC = TextEditingController();
-  TextEditingController tanggalLahirC = TextEditingController();
-  TextEditingController tempatLahirC = TextEditingController();
-  TextEditingController jabatanC = TextEditingController();
-  TextEditingController namaPegawaiC = TextEditingController();
-  TextEditingController jenisKelaminC = TextEditingController();
-  TextEditingController alamatC = TextEditingController();
-  
 
-  void updatePegawai() async {}
+  TextEditingController kdAksesC = TextEditingController();
+  TextEditingController alamatC = TextEditingController();
+  TextEditingController emailC= TextEditingController(text: "email c");
+  TextEditingController noTelpC = TextEditingController();
+  TextEditingController namaPegawaiC = TextEditingController();
+
+
+  Future<void> updatePegawai() async {
+    Map<String, dynamic> userData = await userDetailsController.getUserDetails();
+
+
+  }
 }
