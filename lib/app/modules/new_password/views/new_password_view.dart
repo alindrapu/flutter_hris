@@ -57,9 +57,9 @@ class NewPasswordView extends GetView<NewPasswordController> {
                   () => ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(Styles.themeDark),
+                  WidgetStateProperty.all<Color>(Styles.themeDark),
                   foregroundColor:
-                  MaterialStateProperty.all<Color>(Styles.themeLight),
+                  WidgetStateProperty.all<Color>(Styles.themeLight),
                 ),
                 onPressed: () async {
                   if (controller.isLoading.isFalse) {
