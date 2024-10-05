@@ -124,8 +124,18 @@ class ProfileView extends GetView<ProfileController> {
                             message:
                                 "Apakah anda yakin untuk unduh data rekap?",
                             confirmButtonText: "Ya",
-                            onConfirm: () {
-                              controller.downloadPresensiExcel();
+                            onConfirm: () async {
+                              Get.dialog(
+                                const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Styles.themeLight,
+                                    backgroundColor: Styles.themeDark,
+                                  ),
+                                ),
+                                barrierDismissible: true,
+                              );
+                              await controller.downloadPresensiExcel();
+                              Get.back();
                             },
                             cancelButtonText: "Batal",
                             onCancel: () {},
