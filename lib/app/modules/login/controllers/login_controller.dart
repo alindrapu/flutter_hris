@@ -86,7 +86,8 @@ class LoginController extends GetxController {
         }
         print(errorMessage);
         isLoading.value = false;
-        Get.snackbar("Terjadi Kesalahan", "Gagal melakukan login. $e");
+        Get.snackbar(
+            "Terjadi Kesalahan", "Gagal melakukan login. Coba lagi nanti");
       }
     } else {
       Get.snackbar("Terjadi Kesalahan", "Email dan Password harus diisi!");

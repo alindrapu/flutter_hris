@@ -30,7 +30,8 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    Future<Map<String, dynamic>> userData = userDetailsController.getUserDetails();
+    Future<Map<String, dynamic>> userData =
+        userDetailsController.getUserDetails();
 
     return Scaffold(
       appBar: AppBar(
@@ -150,10 +151,12 @@ class UpdateProfileView extends GetView<UpdateProfileController> {
                 ),
                 const SizedBox(height: 30),
                 Obx(
-                      () => ElevatedButton(
+                  () => ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(Styles.themeDark),
-                      foregroundColor: WidgetStateProperty.all<Color>(Styles.themeLight),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Styles.themeDark),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Styles.themeLight),
                     ),
                     onPressed: () async {
                       if (controller.isLoading.isFalse) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/styles/styles.dart';
 import 'package:hris/app/routes/app_pages.dart';
+import 'package:hris/app/widgets/no_data.dart';
 import 'package:intl/intl.dart';
 
 import '../controllers/approval_cuti_controller.dart';
@@ -50,6 +51,8 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                 );
               } else if (snapshot.hasError) {
                 return Text("Error $snapshot");
+              } else if (!snapshot.hasError && approveC.approveList.isEmpty) {
+                return const NoDataWidget();
               } else {
                 return ListView.builder(
                   shrinkWrap: true,
@@ -58,9 +61,9 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                   itemBuilder: (context, index) {
                     Map<String, dynamic> list = approveC.approveList[index];
 
-                    final tanggalMulai = DateTime.parse(list['tanggal_mulai']);
-                    final tanggalSelesai =
-                        DateTime.parse(list['tanggal_selesai']);
+                    // final tanggalMulai = DateTime.parse(list['tanggal_mulai']);
+                    // final tanggalSelesai =
+                    //     DateTime.parse(list['tanggal_selesai']);
                     final tanggalPengajuan =
                         DateTime.parse(list['tanggal_pengajuan']);
                     return Container(

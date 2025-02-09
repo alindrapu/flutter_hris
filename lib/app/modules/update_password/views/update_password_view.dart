@@ -1,24 +1,99 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:hris/app/styles/styles.dart';
 
 import '../controllers/update_password_controller.dart';
 
 class UpdatePasswordView extends GetView<UpdatePasswordController> {
   const UpdatePasswordView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('UpdatePasswordView'),
-        centerTitle: true,
-      ),
-      body: const Center(
-        child: Text(
-          'UpdatePasswordView is working',
-          style: TextStyle(fontSize: 20),
+        appBar: AppBar(
+          backgroundColor: Styles.themeDark,
+          foregroundColor: Styles.themeLight,
+          title: const Text('Ubah Password'),
+          centerTitle: true,
         ),
-      ),
-    );
+        body: ListView(
+          padding: const EdgeInsets.all(40),
+          children: [
+            TextField(
+              controller: controller.oldPassC,
+              autocorrect: false,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Password Lama",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeDark),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeLight),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              controller: controller.newPassC,
+              autocorrect: false,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: "Password Baru",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeDark),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeLight),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              autocorrect: false,
+              obscureText: true,
+              controller: controller.confirmNewPassC,
+              decoration: InputDecoration(
+                labelText: "Konfirmasi Password Baru",
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeDark),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Styles.themeLight),
+                  borderRadius: BorderRadius.circular(9),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Obx(
+              () => ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Styles.themeDark),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Styles.themeLight),
+                ),
+                onPressed: () async {
+                  try {
+                    if (controller.isLoading.isFalse) {
+                      await controller.updatePass();
+                    }
+                  } catch (e) {
+                    Get.snackbar(
+                        "Terjadi Kesalahan", "Gagal mengubah password");
+                  }
+                },
+                child: Text(
+                    controller.isLoading.isFalse ? "Ubah" : "Sedang Proses.."),
+              ),
+            ),
+          ],
+        ));
   }
 }

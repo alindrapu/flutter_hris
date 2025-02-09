@@ -158,9 +158,9 @@ class _PengajuanCutiViewState extends State<PengajuanCutiView> {
             () => ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
-                    WidgetStateProperty.all<Color>(Styles.themeDark),
+                    MaterialStateProperty.all<Color>(Styles.themeDark),
                 foregroundColor:
-                    WidgetStateProperty.all<Color>(Styles.themeLight),
+                    MaterialStateProperty.all<Color>(Styles.themeLight),
               ),
               onPressed: () async {
                 if (controller.isLoading.isFalse) {

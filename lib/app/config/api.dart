@@ -1,5 +1,5 @@
 class Api {
-  static const _baseUrl = "https://absensinet-api.alindraputra.info/api";
+  static const _baseUrl = "https://absensinet-api.berkode.my.id/api";
   static const login = "$_baseUrl/login";
   static const register = "$_baseUrl/register";
   static const logout = "$_baseUrl/logout";
@@ -9,6 +9,7 @@ class Api {
   static const newPassword = "$_baseUrl/new-password";
   static const newKdAkses = "$_baseUrl/new-kd-akses";
   static const newKdPass = "$_baseUrl/new-kd-password";
+  static const updatePass = "$_baseUrl/update-password";
   static const addPegawaiCurrent = "$_baseUrl/add-pegawai-current";
   static const updateCurrentPosition = "$_baseUrl/update-current-position";
   static const absenPegawai = "$_baseUrl/presensi-pegawai";
