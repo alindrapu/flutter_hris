@@ -16,6 +16,7 @@ import 'package:open_filex/open_filex.dart';
 class ProfileController extends GetxController {
   RxBool isLoading = false.obs;
   late RxMap<String, dynamic> userDetails;
+  TextEditingController tanggalPresensiC = TextEditingController();
 
   @override
   void onInit() {
@@ -47,15 +48,12 @@ class ProfileController extends GetxController {
     try {
       final response = await http.get(Uri.parse(url),
           headers: {'Authorization': 'Bearer ${userDetails['token']}'});
-
       if (response.statusCode == 200) {
         Get.snackbar(
           "Berhasil",
           "Anda berhasil keluar! Silahkan masuk kembali",
           backgroundColor: Styles.themeTeal,
         );
-
-        // Use Future.microtask to ensure that this runs in the main isolate
         Future.microtask(() {
           Navigator.of(Get.context!).pushNamedAndRemoveUntil(
               '/login', (Route<dynamic> route) => false);
@@ -67,38 +65,27 @@ class ProfileController extends GetxController {
   }
 
   Future<void> downloadPresensiExcel() async {
-    // Ensure the required permissions are granted
     if (await Permission.photos.request().isGranted) {
-      // Define the API endpoint
       String url = Api.downloadLogPresensi;
 
-      // Define the headers
       final Map<String, String> headers = {
         "Accept": "application/json",
         "Authorization": "Bearer ${userDetails['token']}",
         "Content-Type": "application/json",
       };
-
-      // Make the HTTP GET request
-      const tanggalPresensi = '2024-01';
       final response = await http.get(
-          Uri.parse('$url?tanggal_presensi=$tanggalPresensi'),
+          Uri.parse('$url?tanggal_presensi=${tanggalPresensiC}'),
           headers: headers);
 
-      // Check if the request was successful
       if (response.statusCode == 200) {
-        // Get the external storage directory
         Directory? directory = await getDownloadsDirectory();
         directory ??= await getApplicationDocumentsDirectory();
 
-        // Create a custom directory if necessary
         final String customDir = '${directory.path}/DownloadedExcels';
         await Directory(customDir).create(recursive: true);
 
-        final filePath =
-            '$customDir/log_presensi_${tanggalPresensi.replaceAll("-", "_")}.xlsx';
+        final filePath = '$customDir/log_presensi_${tanggalPresensiC}.xlsx';
 
-        // Create the file and write the response bytes
         final file = File(filePath);
         await file.writeAsBytes(response.bodyBytes);
         Get.dialog(

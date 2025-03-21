@@ -48,13 +48,13 @@ class ApprovalCutiController extends GetxController {
         }
         if (responseData.containsKey('data') && responseData['data'] is List) {
           List<dynamic> data = responseData['data'];
-          List<String> total = responseData['total'];
+
           if (data.isNotEmpty) {
             approveList.value = List<Map<String, dynamic>>.from(data);
           } else {
-            approveList.value = List<Map<String, dynamic>>.from(total);
+            approveList.value = [];
             if (kDebugMode) {
-              print("Error: Received empty data list");
+              print("No data available");
             }
           }
         } else {

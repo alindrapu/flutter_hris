@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
@@ -13,6 +14,8 @@ import 'package:local_auth/local_auth.dart';
 import 'package:local_auth_android/local_auth_android.dart';
 import 'package:local_auth_ios/local_auth_ios.dart';
 import 'package:http/http.dart' as http;
+
+import '../styles/styles.dart';
 
 class AbsenController extends GetxController {
   TextEditingController alasanC = TextEditingController();
@@ -103,7 +106,8 @@ class AbsenController extends GetxController {
 
     try {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
-      if (canCheckBiometrics) {
+      bool isDeviceSupported = await localAuth.isDeviceSupported();
+      if (canCheckBiometrics && isDeviceSupported) {
         final bool didAuthenticate = await localAuth.authenticate(
           localizedReason: 'Lakukan otentikasi untuk melakukan presensi',
           authMessages: const <AuthMessages>[
@@ -123,16 +127,86 @@ class AbsenController extends GetxController {
           return;
         }
       } else {
-        // Handle the case where biometrics are not available
-        Get.snackbar("Otentikasi Gagal", "Kesalahan pada otentikasi perangkat");
-        return;
+        // Fallback to password input
+        String? password = await showDialog<String>(
+          context: Get.context!,
+          builder: (BuildContext context) {
+            TextEditingController passwordController = TextEditingController();
+            return AlertDialog(
+              title: const Text("Password Diperlukan"),
+              content: TextField(
+                controller: passwordController,
+                cursorColor: Colors.black,
+                keyboardType: TextInputType.text,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Styles.themeDark),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Styles.themeLight),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                ),
+                obscureText: true,
+              ),
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(0, 45),
+                    backgroundColor: Styles.themeDark,
+                    foregroundColor: const Color(0xFFFFFFFF),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () async {
+                    String textValue = passwordController.text;
+                    Navigator.of(context).pop(textValue);
+                  },
+                  child: const Text(
+                    "Kirim",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0, 45),
+                      backgroundColor: Styles.themeCancel,
+                      foregroundColor: const Color(0xFFFFFFFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () async {
+                      Get.toNamed(Routes.home);
+                    },
+                    child: const Text(
+                      'Batal',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+
+        if (password == null || password.isEmpty) {
+          Get.snackbar("Otentikasi Gagal", "Presensi dibatalkan.");
+          return;
+        }
+        bool isValidPassword = await checkPassword(password);
+
+        if (isValidPassword) {
+          Get.snackbar("Otentikasi Berhasil", "Presensi diterima.");
+        } else {
+          Get.snackbar("Otentikasi Gagal", "Password tidak valid.");
+          return;
+        }
       }
 
-      // final responsePosition = await http.post(Uri.parse(urlUpdate),
-      //     headers: headers, body: jsonPosition);
-      // print(responsePosition.statusCode);
-
-      // if (responsePosition.statusCode == 200) {
       try {
         // Body absen pegawai
         final Map<String, dynamic> absenBody = {
@@ -163,7 +237,7 @@ class AbsenController extends GetxController {
               message: "Berhasil melakukan presensi",
               confirmButtonText: "Kembali",
               onConfirm: () {
-                Get.offAndToNamed(Routes.home);
+                Get.offAllNamed(Routes.home);
               },
               onCancel: () {},
             ),
@@ -183,9 +257,10 @@ class AbsenController extends GetxController {
           ),
         );
       }
-      // }
     } catch (e) {
       Get.snackbar("Terjadi Kesalahan", "Gagal memperbarui posisi terakhir");
+      _isFetching = false;
+      print(e);
     }
   }
 
@@ -240,5 +315,46 @@ class AbsenController extends GetxController {
       _isFetchingCheckAbsen = false;
     }
     return null;
+  }
+
+  Future<bool> checkPassword(String password) async {
+    _isFetching = true;
+
+    try {
+      Map<String, dynamic> userData =
+          await userDetailsController.getUserDetails();
+      final userDetails = userData;
+
+      final Map<String, String> headers = {
+        "Accept": "application/json",
+        "Authorization": "Bearer ${userDetails["token"]}",
+        "Content-Type": "application/json",
+      };
+      final String kdAkses = userDetails['kd_akses'];
+
+      final Map<String, String> body = {
+        "kd_akses": kdAkses,
+        "password": password,
+      };
+
+      String url = Api.checkPassword;
+      final jsonBody = jsonEncode(body);
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: jsonBody);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+        return data['isValid'] == true;
+      } else {
+        print('Error: ${response.statusCode}, ${response.body}');
+      }
+    } catch (e) {
+      print('Exception: $e');
+    } finally {
+      _isFetching = false;
+    }
+
+    return false;
   }
 }

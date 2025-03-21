@@ -459,11 +459,6 @@ class HomeView extends StatelessWidget {
                         }
                         Map<String, dynamic> history =
                             absenC.historyList[index];
-                        //
-                        // if (kDebugMode) {
-                        //   print(history);
-                        // }
-
                         final historyDate =
                             DateTime.parse(history['tanggal_presensi']);
 

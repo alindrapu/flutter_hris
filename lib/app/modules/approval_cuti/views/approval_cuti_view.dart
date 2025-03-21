@@ -52,6 +52,7 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
               } else if (snapshot.hasError) {
                 return Text("Error $snapshot");
               } else if (!snapshot.hasError && approveC.approveList.isEmpty) {
+                debugPrint('approveList Data: ${approveC.approveList}');
                 return const NoDataWidget();
               } else {
                 return ListView.builder(
@@ -60,14 +61,10 @@ class _ApprovalCutiViewState extends State<ApprovalCutiView> {
                   itemCount: approveC.approveList.length,
                   itemBuilder: (context, index) {
                     Map<String, dynamic> list = approveC.approveList[index];
-
-                    // final tanggalMulai = DateTime.parse(list['tanggal_mulai']);
-                    // final tanggalSelesai =
-                    //     DateTime.parse(list['tanggal_selesai']);
                     final tanggalPengajuan =
                         DateTime.parse(list['tanggal_pengajuan']);
                     return Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      margin: const EdgeInsets.only(left: 1, right: 1),
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: Material(

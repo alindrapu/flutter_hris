@@ -66,6 +66,7 @@ class TextDialog extends StatelessWidget {
                       children: [
                         TextField(
                           controller: controller,
+                          cursorColor: Colors.black,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder(

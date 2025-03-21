@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hris/app/config/api.dart';
@@ -14,28 +15,24 @@ class LoginController extends GetxController {
   TextEditingController kdAksesC = TextEditingController();
   TextEditingController passC = TextEditingController();
 
+  // Login Method
   Future<void> login() async {
     if (kdAksesC.text.isNotEmpty && passC.text.isNotEmpty) {
       isLoading.value = true;
       String url = Api.login;
-
       Map<String, String> loginData = {
         'kd_akses': kdAksesC.text,
         'password': passC.text,
       };
-
       String jsonData = jsonEncode(loginData);
-
       try {
         final response = await http.post(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: jsonData,
         );
-
         if (response.statusCode == 200) {
           isLoading.value = false;
-
           final Map<String, dynamic> responseData = json.decode(response.body);
           final String token = responseData['token'];
           final int isAdmin = responseData['user']['is_admin'];
@@ -48,7 +45,6 @@ class LoginController extends GetxController {
           final int stsKepeg = responseData['sts_kepeg'];
           final String alamat = responseData['alamat'];
           final String telp = responseData['telp'];
-
           await storeUserData(
             token: token,
             isAdmin: isAdmin,
@@ -62,8 +58,7 @@ class LoginController extends GetxController {
             alamat: alamat,
             telp: telp,
           );
-
-          print(response.body);
+          if (kDebugMode) print(response.body);
           if (passC.text == "password" &&
               responseData['user']['added_kd_akses'] == 0) {
             Get.offAllNamed(Routes.newKdPass);
@@ -84,10 +79,9 @@ class LoginController extends GetxController {
         } catch (error) {
           print('Error JSON: $error');
         }
-        print(errorMessage);
+        if (kDebugMode) print(errorMessage);
         isLoading.value = false;
-        Get.snackbar(
-            "Terjadi Kesalahan", "Gagal melakukan login. Coba lagi nanti");
+        Get.snackbar("Terjadi Kesalahan", errorMessage);
       }
     } else {
       Get.snackbar("Terjadi Kesalahan", "Email dan Password harus diisi!");

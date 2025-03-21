@@ -44,10 +44,10 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
         ),
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(5),
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Styles.themeDark),
@@ -60,8 +60,9 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                   children: [
                     Text(
                       data['nama'].toString().toUpperCase(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: MediaQuery.of(context).size.width * 0.05),
                     ),
                   ],
                 ),
@@ -70,8 +71,10 @@ class DetailApprovalCutiView extends GetView<DetailApprovalCutiController> {
                   children: [
                     Text(
                       data['nm_jabatan'].toString().toUpperCase(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500, fontSize: 17),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: MediaQuery.of(context).size.width * 0.05,
+                      ),
                     ),
                   ],
                 ),

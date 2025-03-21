@@ -21,4 +21,6 @@ class Api {
   static const listApproveCuti = "$_baseUrl/get-list-permohonan-cuti";
   static const downloadLogPresensi = "$_baseUrl/presensi/export-xls";
   static const approveCuti = "$_baseUrl/update-cuti";
+  static const checkPassword = "$_baseUrl/check-password";
+  static const listRiwayatCuti = "$_baseUrl/list-riwayat-cuti";
 }
